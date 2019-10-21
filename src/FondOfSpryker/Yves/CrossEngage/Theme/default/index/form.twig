@@ -1,0 +1,14 @@
+<div class="small-12 columns">
+    <div class="small-12 medium-4 columns">
+        {{ form_start(CrossEngageSubscriptionForm, {'action': path('ROUTE_CrossEngage_SUBMIT', {'newsletter': 'newsletter'}) }) }}
+            <div class="input-group">
+                <span class="input-group-label">
+                    <i class="fa fa-at"></i>
+                </span>
+                {{ form_row(CrossEngageSubscriptionForm.email) }}
+            </div>
+
+            {{ form_row(CrossEngageSubscriptionForm.submit) }}
+        {{ form_end(CrossEngageSubscriptionForm) }}
+    </div>
+</div>

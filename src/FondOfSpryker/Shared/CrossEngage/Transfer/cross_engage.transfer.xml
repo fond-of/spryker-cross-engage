@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<transfers xmlns="spryker:transfer-01"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
+
+    <transfer name="CrossEngage">
+        <property name="emailNewsletterStateForAffenzahn" type="string"/>
+        <property name="emailNewsletterStateForAevor" type="string"/>
+        <property name="emailNewsletterStateForPinqponq" type="string"/>
+        <property name="emailOptInSourceAffenzahn" type="string"/>
+        <property name="emailOptInSourceAevor" type="string"/>
+        <property name="emailOptInSourcePinqponq" type="string"/>
+        <property name="language" type="string"/>
+        <property name="ipAevor" type="string"/>
+        <property name="ipAffenzahn" type="string"/>
+        <property name="ipPinqponq" type="string"/>
+        <property name="optInAtForAffenzahn" type="string"/>
+        <property name="optInAtForAevor" type="string"/>
+        <property name="optInAtForPinqponq" type="string"/>
+        <property name="subscribedAtForAffenzahn" type="string"/>
+        <property name="subscribedAtForAevor" type="string"/>
+        <property name="subscribedAtForPinqponq" type="string"/>
+        <property name="unsubscribedAtForAffenzahn" type="string"/>
+        <property name="unsubscribedAtForAffenzahn" type="string"/>
+        <property name="unsubscribedAtForAevor" type="string"/>
+        <property name="unsubscribedAtForPinqponq" type="string"/>
+        <property name="email" type="string"/>
+        <property name="firstName" type="string"/>
+        <property name="lastName" type="string"/>
+        <property name="gender" type="string"/>
+        <property name="birthday" type="string"/>
+        <property name="externalId" type="string"/>
+        <property name="address" type="CrossEngageAddress"/>
+    </transfer>
+
+    <transfer name="CrossEngageAddress">
+        <property name="line1" type="string"/>
+        <property name="line2" type="string"/>
+        <property name="zip" type="string"/>
+        <property name="city" type="string"/>
+    </transfer>
+
+    <transfer name="CrossEngageResponse">
+        <property name="id" type="string"/>
+        <property name="xngId" type="string"/>
+        <property name="email" type="string"/>
+        <property name="businessUnit" type="string"/>
+        <property name="success" type="bool"/>
+    </transfer>
+
+</transfers>
