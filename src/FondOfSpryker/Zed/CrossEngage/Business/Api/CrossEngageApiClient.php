@@ -23,8 +23,6 @@ class CrossEngageApiClient
     protected $config;
 
     /**
-     * CrossEngageApi constructor.
-     *
      * @param \FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface $guzzleClient
      * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig $config
      */

@@ -28,6 +28,16 @@ class CrossEngageConfig extends AbstractBundleConfig
     }
 
     /**
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function getAlreadySubscribed(string $locale): string
+    {
+        return $this->getLocalized(CrossEngageConstants::CROSS_ENGAGE_ALREADY_SUBSCRIBED_PATH, $locale);
+    }
+
+    /**
      * @param string $key
      * @param string $locale
      * @param mixed $default

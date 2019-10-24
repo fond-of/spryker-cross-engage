@@ -92,4 +92,9 @@ class CrossEngageControllerProvider extends AbstractYvesControllerProvider
 
         return $this;
     }
+
+    protected function addAlreadySubscribed(string $locale): self
+    {
+        $alreadySubscribedPath = $this->getConfig();
+    }
 }

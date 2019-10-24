@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\CrossEngage\Business\Subscription;
 
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageApiClient;
+use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 
@@ -22,15 +23,22 @@ class SubscriptionHandler
     protected $crossEngageApiClient;
 
     /**
+     * @var \FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper
+     */
+    protected $mapper;
+
+    /**
      * SubscriptionHandler constructor.
      *
      * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig $config
      * @param \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageApiClient $crossEngageApiClient
+     * @param \FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper $mapper
      */
-    public function __construct(CrossEngageConfig $config, CrossEngageApiClient $crossEngageApiClient)
+    public function __construct(CrossEngageConfig $config, CrossEngageApiClient $crossEngageApiClient, StateMapper $mapper)
     {
         $this->config = $config;
         $this->crossEngageApiClient = $crossEngageApiClient;
+        $this->mapper = $mapper;
     }
 
     /**

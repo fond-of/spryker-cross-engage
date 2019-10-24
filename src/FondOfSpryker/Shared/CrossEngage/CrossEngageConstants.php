@@ -11,6 +11,7 @@ interface CrossEngageConstants
     public const CROSS_ENGAGE_LOCALIZED_CONFIGS = 'CROSS_ENGAGE_LOCALIZED_CONFIGS';
     public const CROSS_ENGAGE_SUBSCRIBE_PATH = 'CROSS_ENGAGE_SUBSCRIBE_PATH';
     public const CROSS_ENGAGE_CONFIRMATION_PATH = 'CROSS_ENGAGE_CONFIRMATION_PATH';
+    public const CROSS_ENGAGE_ALREADY_SUBSCRIBED_PATH = 'CROSS_ENGAGE_ALREADY_SUBSCRIBED_PATH';
 
     public const CROSS_ENGAGE_API_URI = 'CROSS_ENGAGE_API_URI';
     public const CROSS_ENGAGE_API_URI_FETCH_USER = 'CROSS_ENGAGE_API_URI_FETCH_USER';
@@ -27,4 +28,12 @@ interface CrossEngageConstants
     public const XNG_STATE_EMAIL_SENT = 2;
     public const XNG_STATE_SUBSCRIBED = 3;
     public const XNG_STATE_UNSUBSCRIBED = 4;
+
+    public const XNG_STATES = [
+        'null' => self::XNG_STATE_NULL,
+        'new' => self::XNG_STATE_NEW,
+        'email_sent' => self::XNG_STATE_EMAIL_SENT,
+        'subscribed' => self::XNG_STATE_SUBSCRIBED,
+        'unsubscribed' => self::XNG_STATE_UNSUBSCRIBED,
+    ];
 }

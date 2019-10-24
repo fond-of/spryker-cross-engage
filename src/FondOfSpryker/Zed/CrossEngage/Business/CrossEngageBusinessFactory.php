@@ -4,6 +4,7 @@ namespace FondOfSpryker\Zed\CrossEngage\Business;
 
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\Model\XngDefaultHeaderModel;
+use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Subscription\SubscriptionHandler;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
@@ -19,7 +20,11 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
      */
     public function createSubscriptionHandler(): SubscriptionHandler
     {
-        return new SubscriptionHandler($this->getConfig(), $this->createCrossEngageApiClient());
+        return new SubscriptionHandler(
+            $this->getConfig(),
+            $this->createCrossEngageApiClient(),
+            $this->createStateMapper()
+        );
     }
 
     /**
@@ -27,7 +32,10 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
      */
     protected function createCrossEngageApiClient(): CrossEngageApiClient
     {
-        return new CrossEngageApiClient($this->getGuzzleClient(), $this->getConfig());
+        return new CrossEngageApiClient(
+            $this->getGuzzleClient(),
+            $this->getConfig()
+        );
     }
 
     /**
@@ -46,5 +54,13 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     public function createXngDefaultHeaderModel(): XngDefaultHeaderModel
     {
         return new XngDefaultHeaderModel($this->getConfig());
+    }
+
+    /**
+     * @return StateMapper
+     */
+    protected function createStateMapper(): StateMapper
+    {
+        return new StateMapper();
     }
 }
