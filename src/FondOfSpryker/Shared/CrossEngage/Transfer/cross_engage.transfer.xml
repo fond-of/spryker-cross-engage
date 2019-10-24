@@ -21,7 +21,6 @@
         <property name="subscribedAtForAevor" type="string"/>
         <property name="subscribedAtForPinqponq" type="string"/>
         <property name="unsubscribedAtForAffenzahn" type="string"/>
-        <property name="unsubscribedAtForAffenzahn" type="string"/>
         <property name="unsubscribedAtForAevor" type="string"/>
         <property name="unsubscribedAtForPinqponq" type="string"/>
         <property name="email" type="string"/>
@@ -30,6 +29,7 @@
         <property name="gender" type="string"/>
         <property name="birthday" type="string"/>
         <property name="externalId" type="string"/>
+        <property name="businessUnit" type="string"/>
         <property name="address" type="CrossEngageAddress"/>
     </transfer>
 
@@ -44,8 +44,10 @@
         <property name="id" type="string"/>
         <property name="xngId" type="string"/>
         <property name="email" type="string"/>
-        <property name="businessUnit" type="string"/>
-        <property name="success" type="bool"/>
+        <property name="emailNewsletterStateForAffenzahn" type="string"/>
+        <property name="emailNewsletterStateForAevor" type="string"/>
+        <property name="emailNewsletterStateForPinqponq" type="string"/>
+        <property name="status" type="string"/>
     </transfer>
 
 </transfers>

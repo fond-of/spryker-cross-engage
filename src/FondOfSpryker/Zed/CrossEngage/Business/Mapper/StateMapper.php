@@ -6,12 +6,12 @@ use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 
 class StateMapper
 {
-    public function getState(string $state): ?int
+    public function getNumericState(string $state): ?int
     {
-        if (!array_key_exists(CrossEngageConstants::XNG_STATES)) {
+        if (!\array_key_exists($state, CrossEngageConstants::XNG_NUMERIC_STATES)) {
             return null;
         }
 
-        return CrossEngageConstants::XNG_STATES[$state];
+        return CrossEngageConstants::XNG_NUMERIC_STATES[$state];
     }
 }

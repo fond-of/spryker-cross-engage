@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\CrossEngage\Business\Api;
 
 use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
+use FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
@@ -23,13 +24,27 @@ class CrossEngageApiClient
     protected $config;
 
     /**
+     * @var string
+     */
+    protected $storeName;
+    /**
+     * @var CrossEngageResponseMapper
+     */
+    private $responseMapper;
+
+    /**
      * @param \FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface $guzzleClient
      * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig $config
+     * @param \FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper $responseMapper
      */
-    public function __construct(CrossEngageToGuzzleInterface $guzzleClient, CrossEngageConfig $config)
-    {
+    public function __construct(
+        CrossEngageToGuzzleInterface $guzzleClient,
+        CrossEngageConfig $config,
+        CrossEngageResponseMapper $responseMapper
+    ) {
         $this->guzzleClient = $guzzleClient;
         $this->config = $config;
+        $this->responseMapper = $responseMapper;
     }
 
     /**
@@ -38,7 +53,7 @@ class CrossEngageApiClient
      *
      * @return \Generated\Shared\Transfer\CrossEngageResponseTransfer|null
      */
-    public function fetchUser(CrossEngageTransfer $transfer, array $options = []): ?CrossEngageTransfer
+    public function fetchUser(CrossEngageTransfer $transfer, array $options = []): ?CrossEngageResponseTransfer
     {
         try {
             $response = $this->guzzleClient->get(
@@ -47,8 +62,9 @@ class CrossEngageApiClient
             );
 
             $contentArray = json_decode($response->getBody()->getContents(), true);
+            $crossEngageResponseTransfer = $this->responseMapper->map($contentArray);
 
-            return (new CrossEngageTransfer)->fromArray($contentArray, true);
+            return $crossEngageResponseTransfer;
         } catch (RequestException $e) {
             if ($e->getCode() === Response::HTTP_NOT_FOUND) {
                 return null;
@@ -76,10 +92,12 @@ class CrossEngageApiClient
             );
 
             $contentArray = json_decode($response->getBody()->getContents(), true);
+            $crossEngageResponseTransfer = $this->responseMapper->map($contentArray);
+            $crossEngageResponseTransfer->setStatus(CrossEngageConstants::XNG_INTERNAL_STATE_CREATED);
 
-            return $crossEngageResponseTransfer->fromArray($contentArray, true);
+            return $crossEngageResponseTransfer;
         } catch (RequestException $e) {
-            $crossEngageResponseTransfer->setSuccess(false);
+            $crossEngageResponseTransfer->setStatus(sprintf(CrossEngageConstants::XNG_INTERNAL_STATE_CREATED_FAILED, __METHOD__));
         }
 
         return $crossEngageResponseTransfer;

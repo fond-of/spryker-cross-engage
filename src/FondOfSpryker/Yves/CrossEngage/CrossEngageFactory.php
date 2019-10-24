@@ -3,6 +3,7 @@ namespace FondOfSpryker\Yves\CrossEngage;
 
 use FondOfSpryker\Yves\CrossEngage\Form\CrossEngageSubscriptionForm;
 use Spryker\Shared\Application\ApplicationConstants;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Yves\Kernel\AbstractFactory;
 use Symfony\Component\Form\FormInterface;
 
@@ -24,5 +25,23 @@ class CrossEngageFactory extends AbstractFactory
     protected function createCrossEngageSubscriptionForm(): string
     {
         return CrossEngageSubscriptionForm::class;
+    }
+
+    /**
+     * @return Store
+     */
+    protected function getStore(): Store
+    {
+        return Store::getInstance();
+    }
+
+    /**
+     * @return string
+     */
+    public function getStorename(): string
+    {
+        $storeName = \explode('_', $this->getStore()->getStoreName());
+
+        return \ucfirst(\strtolower($storeName[0]));
     }
 }

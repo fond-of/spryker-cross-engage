@@ -23,17 +23,23 @@ interface CrossEngageConstants
     public const XNG_HEADER_FIELD_API_VERSION = 'X-XNG-ApiVersion';
     public const XNG_HEADER_FIELD_AUTH_TOKEN = 'X-XNG-AuthToken';
 
-    public const XNG_STATE_NULL = 0;
-    public const XNG_STATE_NEW = 1;
-    public const XNG_STATE_EMAIL_SENT = 2;
-    public const XNG_STATE_SUBSCRIBED = 3;
-    public const XNG_STATE_UNSUBSCRIBED = 4;
+    public const XNG_STATE_NULL = 'null';
+    public const XNG_STATE_NEW = 'new';
+    public const XNG_STATE_EMAIL_SENT = 'email_send';
+    public const XNG_STATE_SUBSCRIBED = 'subscribed';
+    public const XNG_STATE_UNSUBSCRIBED = 'unsubscribed';
 
-    public const XNG_STATES = [
-        'null' => self::XNG_STATE_NULL,
-        'new' => self::XNG_STATE_NEW,
-        'email_sent' => self::XNG_STATE_EMAIL_SENT,
-        'subscribed' => self::XNG_STATE_SUBSCRIBED,
-        'unsubscribed' => self::XNG_STATE_UNSUBSCRIBED,
+    public const XNG_NUMERIC_STATES = [
+        self::XNG_STATE_NULL => 0,
+        self::XNG_STATE_NEW => 1,
+        self::XNG_STATE_EMAIL_SENT => 2,
+        self::XNG_STATE_SUBSCRIBED => 3,
+        self::XNG_STATE_UNSUBSCRIBED => -1,
     ];
+
+    public const XNG_INTERNAL_STATE_CREATED = 'created';
+
+    public const XNG_INTERNAL_STATE_CREATED_FAILED = 'failed to create user on %s';
+
+
 }

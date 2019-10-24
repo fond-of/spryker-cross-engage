@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\CrossEngage\Controller;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use FondOfSpryker\Yves\CrossEngage\Plugin\Provider\CrossEngageControllerProvider;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 use Spryker\Yves\Kernel\Controller\AbstractController;
@@ -19,15 +20,28 @@ class IndexController extends AbstractController
     /**
      * @param string $email
      *
+     * @param string $clientIp
      * @return \Generated\Shared\Transfer\CrossEngageTransfer
+     *
+     * @throws \Exception
      */
-    protected function createCrossEngageTransfer(string $email): CrossEngageTransfer
+    protected function createCrossEngageTransfer(string $email, string $clientIp): CrossEngageTransfer
     {
-        return (new CrossEngageTransfer())
-            ->setEmail($email)
-            ->setLanguage(explode('_', $this->getLocale())[0]);
+        $setterStoreState = 'setEmailNewsletterStateFor' . $this->getFactory()->getStorename();
+        $setterStoreOptIn = 'setOptInAtFor' . $this->getFactory()->getStorename();
+        $setterIp = 'setIp' . $this->getFactory()->getStorename();
+
+        $xngTransfer = new CrossEngageTransfer();
+        $xngTransfer->setEmail($email);
+        $xngTransfer->setLanguage(\explode('_', $this->getLocale())[0]);
+        $xngTransfer->setBusinessUnit($this->getLocale());
+        $xngTransfer->$setterStoreState(CrossEngageConstants::XNG_STATE_NEW);
+        $xngTransfer->$setterStoreOptIn((new \DateTime())->format(\DateTime::ATOM));
+        $xngTransfer->$setterIp($clientIp);
+
+        return $xngTransfer;
     }
-    
+
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
@@ -47,7 +61,10 @@ class IndexController extends AbstractController
 
         if ($crossEngageSubscriptionForm->isValid()) {
             $this->getClient()->subscribe(
-                $this->createCrossEngageTransfer($crossEngageSubscriptionForm->get('email')->getData())
+                $this->createCrossEngageTransfer(
+                    $crossEngageSubscriptionForm->get('email')->getData(),
+                    $request->getClientIp()
+                )
             );
         }
 
