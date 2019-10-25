@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Client\CrossEngage;
 
+use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 use Spryker\Client\Kernel\AbstractClient;
 
@@ -15,7 +16,7 @@ class CrossEngageClient extends AbstractClient implements CrossEngageClientInter
      *
      * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
-    public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageTransfer
+    public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
         return $this->getFactory()->createCrossEngageStub()->subscribe($crossEngageTransfer);
     }

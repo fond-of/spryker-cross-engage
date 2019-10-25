@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Client\CrossEngage\Zed;
 
+use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 
 interface CrossEngageStubInterface
@@ -9,7 +10,7 @@ interface CrossEngageStubInterface
     /**
      * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
      *
-     * @return \Generated\Shared\Transfer\CrossEngageTransfer
+     * @return CrossEngageResponseTransfer
      */
-    public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageTransfer;
+    public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer;
 }

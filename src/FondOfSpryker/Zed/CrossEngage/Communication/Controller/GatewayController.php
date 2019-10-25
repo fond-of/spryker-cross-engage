@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\CrossEngage\Communication\Controller;
 
+use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
 
@@ -13,12 +14,10 @@ class GatewayController extends AbstractGatewayController
     /**
      * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
      *
-     * @return \Generated\Shared\Transfer\CrossEngageTransfer
+     * @return CrossEngageResponseTransfer
      */
-    public function subscribeAction(CrossEngageTransfer $crossEngageTransfer): CrossEngageTransfer
+    public function subscribeAction(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
-        $this->getFacade()->subscribeToCrossEngage($crossEngageTransfer);
-
-        return $crossEngageTransfer;
+        return $this->getFacade()->subscribeToCrossEngage($crossEngageTransfer);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\CrossEngage\Business;
 
+use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
@@ -15,8 +16,8 @@ class CrossEngageFacade extends AbstractFacade implements CrossEngageFacadeInter
      *
      * @return void
      */
-    public function subscribeToCrossEngage(CrossEngageTransfer $crossEngageTransfer): void
+    public function subscribeToCrossEngage(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
-        $this->getFactory()->createSubscriptionHandler()->processNewsletterSubscriptions($crossEngageTransfer);
+        return $this->getFactory()->createSubscriptionHandler()->processNewsletterSubscriptions($crossEngageTransfer);
     }
 }

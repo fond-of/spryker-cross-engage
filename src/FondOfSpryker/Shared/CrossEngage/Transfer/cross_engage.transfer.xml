@@ -40,6 +40,17 @@
         <property name="city" type="string"/>
     </transfer>
 
+    <transfer name="CrossEngageBaseEvent">
+        <property name="id" type="string"/>
+        <property name="email" type="string"/>
+        <property name="events" type="CrossEngageEvent[]"/>
+    </transfer>
+
+    <transfer name="CrossEngageEvent">
+        <property name="event" type="string"/>
+        <property name="properties" type="array"/>
+    </transfer>
+
     <transfer name="CrossEngageResponse">
         <property name="id" type="string"/>
         <property name="xngId" type="string"/>
@@ -48,6 +59,7 @@
         <property name="emailNewsletterStateForAevor" type="string"/>
         <property name="emailNewsletterStateForPinqponq" type="string"/>
         <property name="status" type="string"/>
+        <property name="redirectTo" type="string"/>
     </transfer>
 
 </transfers>

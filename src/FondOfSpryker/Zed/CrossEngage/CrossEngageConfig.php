@@ -120,10 +120,48 @@ class CrossEngageConfig extends AbstractBundleConfig
     }
 
     /**
+     * @param string $id
+     *
+     * @return string
+     */
+    public function getCrossEngageApiUriEvents(): string
+    {
+        return $this->get(CrossEngageConstants::CROSS_ENGAGE_API_URI_EVENTS, sprintf('events'));
+    }
+
+    /**
      * @return string
      */
     public function getCrossEngageApiKey(): string
     {
         return $this->get(CrossEngageConstants::CROSS_ENGAGE_API_KEY);
+    }
+
+    /**
+     * @return array
+     */
+    public function getXngHeader(): array
+    {
+        $defaultHeaders = [
+            'headers' => [
+                CrossEngageConstants::XNG_HEADER_FIELD_CONTENT_TYPE => 'application/json',
+                CrossEngageConstants::XNG_HEADER_FIELD_API_VERSION => 1,
+                CrossEngageConstants::XNG_HEADER_FIELD_AUTH_TOKEN => $this->getCrossEngageApiKey(),
+            ],
+        ];
+
+        return $this->get(CrossEngageConstants::CROSS_ENGAGE_API_HEADER, $defaultHeaders);
+    }
+
+    /**
+     * @return array
+     */
+    public function getXngRequestOptions(): array
+    {
+        return [
+            'request.options' => [
+                'exceptions' => false,
+            ],
+        ];
     }
 }

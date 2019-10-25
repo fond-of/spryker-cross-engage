@@ -57,4 +57,15 @@ class CrossEngageToGuzzleBridge implements CrossEngageToGuzzleInterface
     {
         return $this->client->put($uri, $options);
     }
+
+    /**
+     * @param string $uri
+     * @param array $options
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function post(string $uri, array $options = []): ResponseInterface
+    {
+        return $this->client->post($uri, $options);
+    }
 }

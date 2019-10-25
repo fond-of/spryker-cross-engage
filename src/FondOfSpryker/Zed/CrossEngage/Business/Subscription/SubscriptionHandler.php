@@ -2,9 +2,10 @@
 
 namespace FondOfSpryker\Zed\CrossEngage\Business\Subscription;
 
-use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageApiClient;
+use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
+use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 
 /**
@@ -18,7 +19,7 @@ class SubscriptionHandler
     protected $config;
 
     /**
-     * @var \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageApiClient
+     * @var \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient
      */
     protected $crossEngageApiClient;
 
@@ -31,10 +32,10 @@ class SubscriptionHandler
      * SubscriptionHandler constructor.
      *
      * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig $config
-     * @param \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageApiClient $crossEngageApiClient
+     * @param \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient $crossEngageApiClient
      * @param \FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper $mapper
      */
-    public function __construct(CrossEngageConfig $config, CrossEngageApiClient $crossEngageApiClient, StateMapper $mapper)
+    public function __construct(CrossEngageConfig $config, CrossEngageUserApiClient $crossEngageApiClient, StateMapper $mapper)
     {
         $this->config = $config;
         $this->crossEngageApiClient = $crossEngageApiClient;
@@ -44,18 +45,20 @@ class SubscriptionHandler
     /**
      * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
      *
-     * @return void
+     * @return CrossEngageResponseTransfer
      */
-    public function processNewsletterSubscriptions(CrossEngageTransfer $crossEngageTransfer): void
+    public function processNewsletterSubscriptions(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
         $crossEngageResponseTransfer = $this->crossEngageApiClient->fetchUser($crossEngageTransfer);
 
         if ($crossEngageResponseTransfer === null) {
-            $this->crossEngageApiClient->createUser($crossEngageTransfer);
+            return $this->crossEngageApiClient->createUser($crossEngageTransfer);
         }
 
-        if ($crossEngageResponseTransfer instanceof CrossEngageTransfer) {
-            $this->crossEngageApiClient->updateUser($crossEngageTransfer);
+        if ($crossEngageResponseTransfer instanceof CrossEngageResponseTransfer) {
+            return $this->crossEngageApiClient->updateUser($crossEngageTransfer);
         }
+
+        return $crossEngageResponseTransfer;
     }
 }

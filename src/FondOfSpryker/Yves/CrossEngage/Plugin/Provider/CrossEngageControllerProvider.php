@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Yves\CrossEngage\Plugin\Provider;
 
+use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use Silex\Application;
 use Spryker\Yves\Kernel\BundleConfigResolverAwareTrait;
 use SprykerShop\Yves\ShopApplication\Plugin\Provider\AbstractYvesControllerProvider;
@@ -12,11 +13,6 @@ use SprykerShop\Yves\ShopApplication\Plugin\Provider\AbstractYvesControllerProvi
 class CrossEngageControllerProvider extends AbstractYvesControllerProvider
 {
     use BundleConfigResolverAwareTrait;
-
-    public const ROUTE_CROSS_ENGAGE_FOOTER = 'ROUTE_CROSS_ENGAGE_FOOTER';
-    public const ROUTE_CROSS_ENGAGE_SUBMIT = 'ROUTE_CROSS_ENGAGE_SUBMIT';
-    public const ROUTE_CROSS_ENGAGE_SUBSCRIBE = 'ROUTE_CROSS_ENGAGE_SUBSCRIBE';
-    public const ROUTE_CROSS_ENGAGE_SUBSCRIBE_CONFIRM = 'ROUTE_CROSS_ENGAGE_SUBSCRIBE_CONFIRM';
 
     /**
      * @param \Silex\Application $app
@@ -38,7 +34,7 @@ class CrossEngageControllerProvider extends AbstractYvesControllerProvider
      */
     protected function addFormSubmitRoute(): self
     {
-        $this->createController('/{newsletter}/submit', static::ROUTE_CROSS_ENGAGE_SUBMIT, 'CrossEngage', 'Index', 'submit')
+        $this->createController('/{newsletter}/submit', CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBMIT, 'CrossEngage', 'Index', 'submit')
             ->assert('newsletter', $this->getAllowedLocalesPattern() . 'newsletter|newsletter')
             ->value('newsletter', 'newsletter')
             ->method('GET|POST');
@@ -51,7 +47,7 @@ class CrossEngageControllerProvider extends AbstractYvesControllerProvider
      */
     protected function addFormRoute(): self
     {
-        $this->createController('/{newsletter}/form', static::ROUTE_CROSS_ENGAGE_FOOTER, 'CrossEngage', 'Index', 'form')
+        $this->createController('/{newsletter}/form', CrossEngageConstants::ROUTE_CROSS_ENGAGE_FOOTER, 'CrossEngage', 'Index', 'form')
             ->assert('newsletter', $this->getAllowedLocalesPattern() . 'newsletter|newsletter')
             ->value('newsletter', 'newsletter')
             ->method('GET|POST');
@@ -68,7 +64,24 @@ class CrossEngageControllerProvider extends AbstractYvesControllerProvider
     {
         $subscribePathPart = $this->getConfig()->getSubscribePath($locale);
 
-        $this->createController(sprintf('/{newsletter}/%s', $subscribePathPart), static::ROUTE_CROSS_ENGAGE_SUBSCRIBE, 'CrossEngage', 'Index', 'subscribe')
+        $this->createController(sprintf('/{newsletter}/%s', $subscribePathPart), CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE, 'CrossEngage', 'Index', 'subscribe')
+            ->assert('newsletter', $this->getAllowedLocalesPattern() . 'newsletter|newsletter')
+            ->value('newsletter', 'newsletter')
+            ->method('GET');
+
+        return $this;
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return $this
+     */
+    protected function addSubscribeFailedRoute(string $locale): self
+    {
+        $subscribePathPart = $this->getConfig()->getSubscribePath($locale);
+
+        $this->createController(sprintf('/{newsletter}/%s', $subscribePathPart), CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE_FAILED, 'CrossEngage', 'Index', 'subscribeFailed')
             ->assert('newsletter', $this->getAllowedLocalesPattern() . 'newsletter|newsletter')
             ->value('newsletter', 'newsletter')
             ->method('GET');
@@ -85,16 +98,11 @@ class CrossEngageControllerProvider extends AbstractYvesControllerProvider
     {
         $confirmationPathPart = $this->getConfig()->getConfirmationPath($locale);
 
-        $this->createController(sprintf('/{newsletter}/%s', $confirmationPathPart), static::ROUTE_CROSS_ENGAGE_SUBSCRIBE_CONFIRM, 'CrossEngage', 'Index', 'subscribeConfirmation')
+        $this->createController(sprintf('/{newsletter}/%s', $confirmationPathPart), CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE_CONFIRM, 'CrossEngage', 'Index', 'subscribeConfirmation')
             ->assert('newsletter', $this->getAllowedLocalesPattern() . 'newsletter|newsletter')
             ->value('newsletter', 'newsletter')
             ->method('GET');
 
         return $this;
-    }
-
-    protected function addAlreadySubscribed(string $locale): self
-    {
-        $alreadySubscribedPath = $this->getConfig();
     }
 }

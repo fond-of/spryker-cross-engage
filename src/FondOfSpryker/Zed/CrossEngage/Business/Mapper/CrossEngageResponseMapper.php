@@ -4,6 +4,7 @@
 namespace FondOfSpryker\Zed\CrossEngage\Business\Mapper;
 
 
+use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 
 class CrossEngageResponseMapper
@@ -48,7 +49,7 @@ class CrossEngageResponseMapper
      *
      * @return CrossEngageResponseTransfer|null
      */
-    protected function mapStateForStore(CrossEngageResponseTransfer $crossEngageResponseTransfer, array $content): CrossEngageResponseTransfer
+    public function mapStateForStore(CrossEngageResponseTransfer $crossEngageResponseTransfer, ?array $content): CrossEngageResponseTransfer
     {
         $key = 'emailNewsletterStateFor' . $this->storeName;
         $setter = 'set' . \ucfirst($key);
@@ -62,7 +63,7 @@ class CrossEngageResponseMapper
             return $crossEngageResponseTransfer;
         }
 
-        if (!array_key_exists($key, $content)) {
+        if (is_array($content) && !array_key_exists($key, $content)) {
             return $crossEngageResponseTransfer->$setter('new');
         }
 

@@ -2,8 +2,10 @@
 
 namespace FondOfSpryker\Zed\CrossEngage\Business;
 
-use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageApiClient;
+use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
+use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\Model\XngDefaultHeaderModel;
+use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Subscription\SubscriptionHandler;
@@ -30,14 +32,15 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageApiClient
+     * @return \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient
      */
-    protected function createCrossEngageApiClient(): CrossEngageApiClient
+    protected function createCrossEngageApiClient(): CrossEngageUserApiClient
     {
-        return new CrossEngageApiClient(
+        return new CrossEngageUserApiClient(
             $this->getGuzzleClient(),
             $this->getConfig(),
-            $this->createCrossEngageResponseMapper()
+            $this->createCrossEngageResponseMapper(),
+            $this->createCrossEngageEventHandler()
         );
     }
 
@@ -85,11 +88,33 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
         return new StateMapper();
     }
 
+    /**
+     * @return CrossEngageResponseMapper
+     */
     protected function createCrossEngageResponseMapper()
     {
         return new CrossEngageResponseMapper(
             $this->createStateMapper(),
             $this->getStorename()
+        );
+    }
+
+    /**
+     * @return CrossEngageEventHandler
+     */
+    protected function createCrossEngageEventHandler(): CrossEngageEventHandler
+    {
+        return new CrossEngageEventHandler(
+            $this->getStorename(),
+            $this->createCrossEngageEventApiClient()
+        );
+    }
+
+    protected function createCrossEngageEventApiClient(): CrossEngageEventApiClient
+    {
+        return new CrossEngageEventApiClient(
+            $this->getGuzzleClient(),
+            $this->getConfig()
         );
     }
 }

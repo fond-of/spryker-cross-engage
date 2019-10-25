@@ -21,7 +21,7 @@ class IndexController extends AbstractController
      * @param string $email
      *
      * @param string $clientIp
-     * @return \Generated\Shared\Transfer\CrossEngageTransfer
+     * @return CrossEngageTransfer
      *
      * @throws \Exception
      */
@@ -35,6 +35,7 @@ class IndexController extends AbstractController
         $xngTransfer->setEmail($email);
         $xngTransfer->setLanguage(\explode('_', $this->getLocale())[0]);
         $xngTransfer->setBusinessUnit($this->getLocale());
+        $xngTransfer->setExternalId(\sha1($email));
         $xngTransfer->$setterStoreState(CrossEngageConstants::XNG_STATE_NEW);
         $xngTransfer->$setterStoreOptIn((new \DateTime())->format(\DateTime::ATOM));
         $xngTransfer->$setterIp($clientIp);
@@ -60,12 +61,14 @@ class IndexController extends AbstractController
         $crossEngageSubscriptionForm = $this->getFactory()->getCrossEngageSubscriptionForm()->handleRequest($request);
 
         if ($crossEngageSubscriptionForm->isValid()) {
-            $this->getClient()->subscribe(
+            $response = $this->getClient()->subscribe(
                 $this->createCrossEngageTransfer(
                     $crossEngageSubscriptionForm->get('email')->getData(),
                     $request->getClientIp()
                 )
             );
+
+            return $this->redirectResponseInternal($response->getRedirectTo());
         }
 
         return [
@@ -87,10 +90,13 @@ class IndexController extends AbstractController
         }
 
         $this->getClient()->subscribe(
-            $this->createCrossEngageTransfer($crossEngageSubscriptionForm->get('email')->getData())
+            $this->createCrossEngageTransfer(
+                $crossEngageSubscriptionForm->get('email')->getData(),
+                $request->getClientIp()
+            )
         );
 
-        return $this->redirectResponseInternal(CrossEngageControllerProvider::ROUTE_CrossEngage_SUBSCRIBE, [
+        return $this->redirectResponseInternal(CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE, [
             'newsletter' => 'newsletter',
         ]);
     }
