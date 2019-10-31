@@ -22,8 +22,6 @@ interface CrossEngageConstants
     public const CROSS_ENGAGE_API_URI = 'CROSS_ENGAGE_API_URI';
     public const CROSS_ENGAGE_API_URI_FETCH_USER = 'CROSS_ENGAGE_API_URI_FETCH_USER';
 
-    public const CROSS_ENGAGE_API_HEADER_CONTENT_TYPE = '';
-    public const CROSS_ENGAGE_API_VERSION = '';
 
     public const XNG_HEADER_FIELD_CONTENT_TYPE = 'Content-Type';
     public const XNG_HEADER_FIELD_API_VERSION = 'X-XNG-ApiVersion';
@@ -31,7 +29,7 @@ interface CrossEngageConstants
 
     public const XNG_STATE_NULL = 'null';
     public const XNG_STATE_NEW = 'new';
-    public const XNG_STATE_EMAIL_SENT = 'email_send';
+    public const XNG_STATE_EMAIL_SENT = 'email_sent';
     public const XNG_STATE_SUBSCRIBED = 'subscribed';
     public const XNG_STATE_UNSUBSCRIBED = 'unsubscribed';
 
@@ -50,6 +48,11 @@ interface CrossEngageConstants
     public const ROUTE_CROSS_ENGAGE_FOOTER = 'ROUTE_CROSS_ENGAGE_FOOTER';
     public const ROUTE_CROSS_ENGAGE_SUBMIT = 'ROUTE_CROSS_ENGAGE_SUBMIT';
     public const ROUTE_CROSS_ENGAGE_SUBSCRIBE = 'ROUTE_CROSS_ENGAGE_SUBSCRIBE';
+    public const ROUTE_CROSS_ENGAGE_UNSUBSCRIBE = 'ROUTE_CROSS_ENGAGE_UNSUBSCRIBE';
+    public const ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION = 'ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION';
+    public const ROUTE_CROSS_ENGAGE_ALREADY_CONFIRMEND = 'ROUTE_CROSS_ENGAGE_ALREADY_CONFIRMEND';
+
+
     public const ROUTE_CROSS_ENGAGE_SUBSCRIBE_FAILED = 'ROUTE_CROSS_ENGAGE_SUBSCRIBE_FAILED';
     public const ROUTE_CROSS_ENGAGE_SUBSCRIBE_CONFIRM = 'ROUTE_CROSS_ENGAGE_SUBSCRIBE_CONFIRM';
 

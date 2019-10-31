@@ -8,6 +8,8 @@ use FondOfSpryker\Zed\CrossEngage\Business\Api\Model\XngDefaultHeaderModel;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper;
+use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreStateMapper;
+use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Subscription\SubscriptionHandler;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
@@ -27,7 +29,7 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
         return new SubscriptionHandler(
             $this->getConfig(),
             $this->createCrossEngageApiClient(),
-            $this->createStateMapper()
+            $this->createStoreTransferMapper()
         );
     }
 
@@ -40,7 +42,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
             $this->getGuzzleClient(),
             $this->getConfig(),
             $this->createCrossEngageResponseMapper(),
-            $this->createCrossEngageEventHandler()
+            $this->createCrossEngageEventHandler(),
+            $this->createStoreTransferMapper()
         );
     }
 
@@ -81,20 +84,12 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return StateMapper
-     */
-    protected function createStateMapper(): StateMapper
-    {
-        return new StateMapper();
-    }
-
-    /**
      * @return CrossEngageResponseMapper
      */
     protected function createCrossEngageResponseMapper()
     {
         return new CrossEngageResponseMapper(
-            $this->createStateMapper(),
+            $this->createStoreTransferMapper(),
             $this->getStorename()
         );
     }
@@ -105,16 +100,27 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     protected function createCrossEngageEventHandler(): CrossEngageEventHandler
     {
         return new CrossEngageEventHandler(
-            $this->getStorename(),
-            $this->createCrossEngageEventApiClient()
+            $this->createCrossEngageEventApiClient(),
+            $this->createStoreTransferMapper()
         );
     }
 
+    /**
+     * @return CrossEngageEventApiClient
+     */
     protected function createCrossEngageEventApiClient(): CrossEngageEventApiClient
     {
         return new CrossEngageEventApiClient(
             $this->getGuzzleClient(),
             $this->getConfig()
         );
+    }
+
+    /**
+     * @return StoreTransferMapper
+     */
+    protected function createStoreTransferMapper(): StoreTransferMapper
+    {
+        return new StoreTransferMapper($this->getStorename());
     }
 }

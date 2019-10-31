@@ -20,7 +20,7 @@ class IndexController extends AbstractController
     /**
      * @param string $email
      *
-     * @param string $clientIp
+     * @param  string $clientIp
      * @return CrossEngageTransfer
      *
      * @throws \Exception
@@ -80,6 +80,8 @@ class IndexController extends AbstractController
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws
      */
     public function submitAction(Request $request): RedirectResponse
     {
@@ -96,28 +98,46 @@ class IndexController extends AbstractController
             )
         );
 
-        return $this->redirectResponseInternal(CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE, [
+        return $this->redirectResponseInternal(
+            CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE, [
             'newsletter' => 'newsletter',
-        ]);
+            ]
+        );
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return array
+     * @return RedirectResponse
      */
-    public function subscribeConfirmationAction(Request $request): array
+    public function confirmSubscriptionAction(Request $request): RedirectResponse
     {
-        return [];
+        $token = $request->get('token');
+
+        if (!$token) {
+            return $this->redirectResponseInternal(HomePageControllerProvider::ROUTE_HOME);
+        }
+
+        $this->getClient()->confirmSubscription(
+            (new CrossEngageTransfer())->setExternalId($token)
+        );
+
+        return $this->redirectResponseInternal(HomePageControllerProvider::ROUTE_HOME);
     }
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Request $request
      *
-     * @return array
+     * @return RedirectResponse
      */
-    public function subscribeAction(Request $request): array
+    public function unsubscribeAction(Request $request): RedirectResponse
     {
-        return [];
+        $token = $request->get('token');
+
+        $this->getClient()->unsubscribe(
+            (new CrossEngageTransfer())->setExternalId($token)
+        );
+
+        return $this->redirectResponseInternal(HomePageControllerProvider::ROUTE_HOME);
     }
 }

@@ -20,4 +20,24 @@ class GatewayController extends AbstractGatewayController
     {
         return $this->getFacade()->subscribeToCrossEngage($crossEngageTransfer);
     }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function confirmSubscriptionAction(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        return $this->getFacade()->confirmSubscriptionToCrossEngage($crossEngageTransfer);
+    }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function unsubscribeAction(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        return $this->getFacade()->unsubscribeToCrossEngage($crossEngageTransfer);
+    }
 }

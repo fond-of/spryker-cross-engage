@@ -18,6 +18,25 @@ class CrossEngageFacade extends AbstractFacade implements CrossEngageFacadeInter
      */
     public function subscribeToCrossEngage(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
-        return $this->getFactory()->createSubscriptionHandler()->processNewsletterSubscriptions($crossEngageTransfer);
+        return $this->getFactory()->createSubscriptionHandler()->subscribe($crossEngageTransfer);
+    }
+
+    /**
+     * @param  CrossEngageTransfer $crossEngageTransfer
+     * @return CrossEngageResponseTransfer
+     */
+    public function confirmSubscriptionToCrossEngage(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        return $this->getFactory()->createSubscriptionHandler()->confirmSubscription($crossEngageTransfer);
+    }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function unsubscribeToCrossEngage(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        return $this->getFactory()->createSubscriptionHandler()->unsubscribe($crossEngageTransfer);
     }
 }

@@ -5,23 +5,26 @@
 
     <transfer name="CrossEngage">
         <property name="emailNewsletterStateForAffenzahn" type="string"/>
-        <property name="emailNewsletterStateForAevor" type="string"/>
-        <property name="emailNewsletterStateForPinqponq" type="string"/>
         <property name="emailOptInSourceAffenzahn" type="string"/>
-        <property name="emailOptInSourceAevor" type="string"/>
-        <property name="emailOptInSourcePinqponq" type="string"/>
-        <property name="language" type="string"/>
-        <property name="ipAevor" type="string"/>
         <property name="ipAffenzahn" type="string"/>
-        <property name="ipPinqponq" type="string"/>
         <property name="optInAtForAffenzahn" type="string"/>
-        <property name="optInAtForAevor" type="string"/>
-        <property name="optInAtForPinqponq" type="string"/>
         <property name="subscribedAtForAffenzahn" type="string"/>
-        <property name="subscribedAtForAevor" type="string"/>
-        <property name="subscribedAtForPinqponq" type="string"/>
         <property name="unsubscribedAtForAffenzahn" type="string"/>
+
+        <property name="emailNewsletterStateForAevor" type="string"/>
+        <property name="emailOptInSourceAevor" type="string"/>
+        <property name="ipAevor" type="string"/>
+        <property name="optInAtForAevor" type="string"/>
+        <property name="subscribedAtForAevor" type="string"/>
         <property name="unsubscribedAtForAevor" type="string"/>
+
+        <property name="emailNewsletterStateForPinqponq" type="string"/>
+        <property name="emailOptInSourcePinqponq" type="string"/>
+        <property name="ipPinqponq" type="string"/>
+        <property name="optInAtForPinqponq" type="string"/>
+        <property name="subscribedAtForPinqponq" type="string"/>
+
+        <property name="language" type="string"/>
         <property name="unsubscribedAtForPinqponq" type="string"/>
         <property name="email" type="string"/>
         <property name="firstName" type="string"/>
@@ -42,13 +45,19 @@
 
     <transfer name="CrossEngageBaseEvent">
         <property name="id" type="string"/>
-        <property name="email" type="string"/>
         <property name="events" type="CrossEngageEvent[]"/>
     </transfer>
 
     <transfer name="CrossEngageEvent">
         <property name="event" type="string"/>
         <property name="properties" type="array"/>
+    </transfer>
+
+    <transfer name="CrossEngageNewsletterEvent">
+        <property name="emailNewsletter" type="string"/>
+        <property name="optInUrl" type="string"/>
+        <property name="optOutUrl" type="string"/>
+        <property name="language" type="string"/>
     </transfer>
 
     <transfer name="CrossEngageResponse">

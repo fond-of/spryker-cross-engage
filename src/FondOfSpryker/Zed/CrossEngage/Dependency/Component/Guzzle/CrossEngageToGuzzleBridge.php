@@ -25,7 +25,7 @@ class CrossEngageToGuzzleBridge implements CrossEngageToGuzzleInterface
     /**
      * @param string $method
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      *
      * @throws
      *
@@ -38,7 +38,7 @@ class CrossEngageToGuzzleBridge implements CrossEngageToGuzzleInterface
 
     /**
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -49,7 +49,7 @@ class CrossEngageToGuzzleBridge implements CrossEngageToGuzzleInterface
 
     /**
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -60,7 +60,7 @@ class CrossEngageToGuzzleBridge implements CrossEngageToGuzzleInterface
 
     /**
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      *
      * @return \Psr\Http\Message\ResponseInterface
      */

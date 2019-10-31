@@ -31,9 +31,13 @@ class CrossEngageDependencyProvider extends AbstractBundleDependencyProvider
     protected function addGuzzleClient(Container $container): Container
     {
         $container[static::CLIENT_GUZZLE] = function (Container $container) {
-            return new CrossEngageToGuzzleBridge(new GuzzleClient([
-                'base_uri' => $this->getConfig()->getCrossEngageApiUri(),
-            ]));
+            return new CrossEngageToGuzzleBridge(
+                new GuzzleClient(
+                    [
+                    'base_uri' => $this->getConfig()->getCrossEngageApiUri(),
+                    ]
+                )
+            );
         };
 
         return $container;

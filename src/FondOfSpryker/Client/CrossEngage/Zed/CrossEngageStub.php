@@ -17,4 +17,24 @@ class CrossEngageStub extends ZedRequestStub implements CrossEngageStubInterface
     {
         return $this->zedStub->call('/cross-engage/gateway/subscribe', $crossEngageTransfer);
     }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        return $this->zedStub->call('/cross-engage/gateway/confirm-subscription', $crossEngageTransfer);
+    }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function unsubscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        return $this->zedStub->call('/cross-engage/gateway/unsubscribe', $crossEngageTransfer);
+    }
 }

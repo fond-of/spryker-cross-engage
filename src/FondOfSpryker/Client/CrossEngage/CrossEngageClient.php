@@ -18,6 +18,32 @@ class CrossEngageClient extends AbstractClient implements CrossEngageClientInter
      */
     public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
-        return $this->getFactory()->createCrossEngageStub()->subscribe($crossEngageTransfer);
+        return $this->getFactory()
+            ->createCrossEngageStub()
+            ->subscribe($crossEngageTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
+     */
+    public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        return $this->getFactory()
+            ->createCrossEngageStub()
+            ->confirmSubscription($crossEngageTransfer);
+    }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function unsubscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        return $this->getFactory()
+            ->createCrossEngageStub()
+            ->unsubscribe($crossEngageTransfer);
     }
 }

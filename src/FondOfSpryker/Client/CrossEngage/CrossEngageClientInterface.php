@@ -13,4 +13,18 @@ interface CrossEngageClientInterface
      * @return CrossEngageResponseTransfer
      */
     public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer;
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer;
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function unsubscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer;
 }

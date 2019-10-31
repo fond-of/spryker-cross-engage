@@ -1,20 +1,25 @@
-namespace: FondOfSpryker
+namespace: fond-of-spryker/cross-engage
+
 suites:
-  unit:
-    path: .
+    unit:
+        path: .
 
 settings:
-  shuffle: true
-  lint: true
-  bootstrap: _bootstrap.php
+    shuffle: true
+    lint: true
+    bootstrap: _bootstrap.php
 
 paths:
-  tests: tests
-  output: tests/_output
-  support: tests/_support
-  data: tests/_data
+    tests: tests
+    output: tests/_output
+    support: tests/_support
+    data: tests/_data
 
 coverage:
-  enabled: true
-  include:
-    - src/*.php
+    enabled: true
+    include:
+        - src/*.php
+
+modules:
+    enabled:
+        - \FondOfCodeception\Module\Spryker

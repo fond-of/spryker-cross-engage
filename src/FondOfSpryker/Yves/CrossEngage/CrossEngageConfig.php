@@ -40,7 +40,7 @@ class CrossEngageConfig extends AbstractBundleConfig
     /**
      * @param string $key
      * @param string $locale
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return mixed
      */

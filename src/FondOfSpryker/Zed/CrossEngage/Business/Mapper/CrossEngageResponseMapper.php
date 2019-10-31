@@ -6,6 +6,7 @@ namespace FondOfSpryker\Zed\CrossEngage\Business\Mapper;
 
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
+use Generated\Shared\Transfer\CrossEngageTransfer;
 
 class CrossEngageResponseMapper
 {
@@ -15,18 +16,18 @@ class CrossEngageResponseMapper
     protected $storeName;
 
     /**
-     * @var StateMapper
+     * @var StoreTransferMapper
      */
-    protected $stateMapper;
+    protected $storeTransferMapper;
 
     /**
-     * @param StateMapper $stateMapper
-     * @param string $storeName
+     * @param StoreTransferMapper $storeTransferMapper
+     * @param string              $storeName
      */
-    public function __construct(StateMapper $stateMapper, string $storeName)
+    public function __construct(StoreTransferMapper $storeTransferMapper, string $storeName)
     {
         $this->storeName = $storeName;
-        $this->stateMapper = $stateMapper;
+        $this->storeTransferMapper = $storeTransferMapper;
     }
 
     /**
@@ -38,18 +39,18 @@ class CrossEngageResponseMapper
     {
         $response = new CrossEngageResponseTransfer();
         $response->fromArray($content, true);
-        $response = $this->mapStateForStore($response, $content);
+        //$response = $this->mapStateForStore($response, $content);
 
         return $response;
     }
 
     /**
      * @param CrossEngageResponseTransfer $crossEngageResponseTransfer
-     * @param array $content
+     * @param array                       $content
      *
      * @return CrossEngageResponseTransfer|null
      */
-    public function mapStateForStore(CrossEngageResponseTransfer $crossEngageResponseTransfer, ?array $content): CrossEngageResponseTransfer
+    public function mapStateForStore(CrossEngageTransfer $crossEngageTransfer, ?array $content): CrossEngageResponseTransfer
     {
         $key = 'emailNewsletterStateFor' . $this->storeName;
         $setter = 'set' . \ucfirst($key);
@@ -67,7 +68,7 @@ class CrossEngageResponseMapper
             return $crossEngageResponseTransfer->$setter('new');
         }
 
-        $numericState = $this->stateMapper->getNumericState($crossEngageResponseTransfer->$getter());
+        $numericState = $this->storeTransferMapper->getNumericState($crossEngageResponseTransfer->$getter());
 
         if ($numericState > 0) {
             return $crossEngageResponseTransfer;

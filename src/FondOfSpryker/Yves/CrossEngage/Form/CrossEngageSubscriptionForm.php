@@ -25,14 +25,15 @@ class CrossEngageSubscriptionForm extends AbstractType
 
     /**
      * @param \Symfony\Component\Form\FormBuilderInterface $builder
-     * @param array $options
+     * @param array                                        $options
      *
      * @return void
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(self::FIELD_EMAIL, EmailType::class, [
+            ->add(
+                self::FIELD_EMAIL, EmailType::class, [
                 'label' => false,
                 'constraints' => [
                     new NotBlank(),
@@ -41,12 +42,15 @@ class CrossEngageSubscriptionForm extends AbstractType
                     'class' => 'input-group-field',
                     'placeholder' => 'newsletter.subscribe',
                 ],
-            ])
-            ->add(self::FIELD_SUBMIT, SubmitType::class, [
+                ]
+            )
+            ->add(
+                self::FIELD_SUBMIT, SubmitType::class, [
                 'attr' => [
                     'class' => 'button expanded',
                 ],
-            ]);
+                ]
+            );
     }
 
     /**
@@ -56,11 +60,13 @@ class CrossEngageSubscriptionForm extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'attr' => [
                 'id' => self::FORM_ID,
             ],
             'csrf_protection' => false,
-        ]);
+            ]
+        );
     }
 }

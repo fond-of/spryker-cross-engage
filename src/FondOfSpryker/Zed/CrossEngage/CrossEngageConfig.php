@@ -54,19 +54,9 @@ class CrossEngageConfig extends AbstractBundleConfig
     }
 
     /**
-     * @param string $locale
-     *
-     * @return string
-     */
-    public function getConfirmationPathPart(string $locale): string
-    {
-        return $this->getLocalized(CrossEngageConstants::CROSS_ENGAGE_CONFIRMATION_PATH, $locale);
-    }
-
-    /**
      * @param string $key
      * @param string $locale
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return mixed
      */

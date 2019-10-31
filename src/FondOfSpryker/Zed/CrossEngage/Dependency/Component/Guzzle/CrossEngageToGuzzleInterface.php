@@ -9,7 +9,7 @@ interface CrossEngageToGuzzleInterface
     /**
      * @param string $method
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -17,7 +17,7 @@ interface CrossEngageToGuzzleInterface
 
     /**
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -25,7 +25,7 @@ interface CrossEngageToGuzzleInterface
 
     /**
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -33,7 +33,7 @@ interface CrossEngageToGuzzleInterface
 
     /**
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      *
      * @return \Psr\Http\Message\ResponseInterface
      */

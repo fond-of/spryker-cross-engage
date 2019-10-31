@@ -2,8 +2,9 @@
 
 namespace FondOfSpryker\Zed\CrossEngage\Business\Subscription;
 
+use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper;
+use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
@@ -24,22 +25,25 @@ class SubscriptionHandler
     protected $crossEngageApiClient;
 
     /**
-     * @var \FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper
+     * @var StoreTransferMapper
      */
-    protected $mapper;
+    private $storeTransferMapper;
 
     /**
      * SubscriptionHandler constructor.
      *
-     * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig $config
+     * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig                     $config
      * @param \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient $crossEngageApiClient
-     * @param \FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper $mapper
+     * @param \FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper           $mapper
      */
-    public function __construct(CrossEngageConfig $config, CrossEngageUserApiClient $crossEngageApiClient, StateMapper $mapper)
-    {
+    public function __construct(
+        CrossEngageConfig $config,
+        CrossEngageUserApiClient $crossEngageApiClient,
+        StoreTransferMapper $storeTransferMapper
+    ) {
         $this->config = $config;
         $this->crossEngageApiClient = $crossEngageApiClient;
-        $this->mapper = $mapper;
+        $this->storeTransferMapper = $storeTransferMapper;
     }
 
     /**
@@ -47,18 +51,58 @@ class SubscriptionHandler
      *
      * @return CrossEngageResponseTransfer
      */
-    public function processNewsletterSubscriptions(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
-        $crossEngageResponseTransfer = $this->crossEngageApiClient->fetchUser($crossEngageTransfer);
+        $fetchedCrossEngageTransfer = $this->crossEngageApiClient->fetchUser($crossEngageTransfer);
 
-        if ($crossEngageResponseTransfer === null) {
+        if ($fetchedCrossEngageTransfer === null) {
             return $this->crossEngageApiClient->createUser($crossEngageTransfer);
         }
 
-        if ($crossEngageResponseTransfer instanceof CrossEngageResponseTransfer) {
-            return $this->crossEngageApiClient->updateUser($crossEngageTransfer);
+        return new CrossEngageResponseTransfer();
+    }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        $crossEngageTransfer = $this->crossEngageApiClient->fetchUser($crossEngageTransfer);
+
+        if ($crossEngageTransfer === null) {
+            return (new CrossEngageResponseTransfer())
+                ->setStatus(sprintf('no user found for external-id %s'), $crossEngageTransfer->getExternalId())
+                ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION);
         }
 
-        return $crossEngageResponseTransfer;
+        if ($crossEngageTransfer instanceof CrossEngageTransfer) {
+            $this->crossEngageApiClient->confirmSubscription($crossEngageTransfer, CrossEngageConstants::XNG_STATE_SUBSCRIBED);
+        }
+
+        return new CrossEngageResponseTransfer();
+    }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function unsubscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
+    {
+        $crossEngageTransfer = $this->crossEngageApiClient->fetchUser($crossEngageTransfer);
+
+        if ($crossEngageTransfer === null) {
+            return (new CrossEngageResponseTransfer())
+                ->setStatus(sprintf('no user found for external-id %s'), $crossEngageTransfer->getExternalId())
+                ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION);
+        }
+
+        if ($crossEngageTransfer instanceof CrossEngageTransfer) {
+            $this->crossEngageApiClient->unsubscribe($crossEngageTransfer, CrossEngageConstants::XNG_STATE_UNSUBSCRIBED);
+        }
+
+        return new CrossEngageResponseTransfer();
     }
 }

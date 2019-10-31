@@ -13,4 +13,11 @@ interface CrossEngageFacadeInterface
      * @return CrossEngageResponseTransfer
      */
     public function subscribeToCrossEngage(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer;
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return CrossEngageResponseTransfer
+     */
+    public function confirmSubscriptionToCrossEngage(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer;
 }
