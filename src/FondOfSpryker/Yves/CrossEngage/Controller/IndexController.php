@@ -112,14 +112,8 @@ class IndexController extends AbstractController
      */
     public function confirmSubscriptionAction(Request $request): RedirectResponse
     {
-        $token = $request->get('token');
-
-        if (!$token) {
-            return $this->redirectResponseInternal(HomePageControllerProvider::ROUTE_HOME);
-        }
-
         $this->getClient()->confirmSubscription(
-            (new CrossEngageTransfer())->setExternalId($token)
+            (new CrossEngageTransfer())->setExternalId($request->get('token'))
         );
 
         return $this->redirectResponseInternal(HomePageControllerProvider::ROUTE_HOME);
@@ -132,10 +126,8 @@ class IndexController extends AbstractController
      */
     public function unsubscribeAction(Request $request): RedirectResponse
     {
-        $token = $request->get('token');
-
         $this->getClient()->unsubscribe(
-            (new CrossEngageTransfer())->setExternalId($token)
+            (new CrossEngageTransfer())->setExternalId($request->get('token'))
         );
 
         return $this->redirectResponseInternal(HomePageControllerProvider::ROUTE_HOME);

@@ -82,7 +82,7 @@ class CrossEngageControllerProvider extends AbstractYvesControllerProvider
      */
     protected function addConfirmSubscription(): self
     {
-        $this->createController('/{newsletter}/confirm-subscription', CrossEngageConstants::ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION, 'CrossEngage', 'Index', 'confirmSubscription')
+        $this->createController('/{newsletter}/confirm-subscription/{token}', CrossEngageConstants::ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION, 'CrossEngage', 'Index', 'confirmSubscription')
             ->assert('newsletter', $this->getAllowedLocalesPattern() . 'newsletter|newsletter')
             ->value('newsletter', 'newsletter')
             ->method('GET');
@@ -95,7 +95,7 @@ class CrossEngageControllerProvider extends AbstractYvesControllerProvider
      */
     protected function addUnsubscribe(): self
     {
-        $this->createController('/{newsletter}/unsubscribe', CrossEngageConstants::ROUTE_CROSS_ENGAGE_UNSUBSCRIBE, 'CrossEngage', 'Index', 'unsubscribe')
+        $this->createController('/{newsletter}/unsubscribe/{token}', CrossEngageConstants::ROUTE_CROSS_ENGAGE_UNSUBSCRIBE, 'CrossEngage', 'Index', 'unsubscribe')
             ->assert('newsletter', $this->getAllowedLocalesPattern() . 'newsletter|newsletter')
             ->value('newsletter', 'newsletter')
             ->method('GET');

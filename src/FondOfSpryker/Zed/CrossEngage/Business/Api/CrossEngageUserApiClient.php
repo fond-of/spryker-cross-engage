@@ -101,9 +101,6 @@ class CrossEngageUserApiClient
     public function createUser(CrossEngageTransfer $crossEngageTransfer, array $options = []): CrossEngageResponseTransfer
     {
         if ($this->putUser($crossEngageTransfer) === true) {
-            $foo = $this->engageEventHandler->optIn($crossEngageTransfer);
-
-
             if ($this->engageEventHandler->optIn($crossEngageTransfer)) {
                 $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
                 $this->putUser($crossEngageTransfer);
