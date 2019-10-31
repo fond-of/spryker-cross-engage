@@ -69,11 +69,12 @@ class SubscriptionHandler
      */
     public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
+        $externalId = $crossEngageTransfer->getExternalId();
         $crossEngageTransfer = $this->crossEngageApiClient->fetchUser($crossEngageTransfer);
 
         if ($crossEngageTransfer === null) {
             return (new CrossEngageResponseTransfer())
-                ->setStatus(sprintf('no user found for external-id %s'), $crossEngageTransfer->getExternalId())
+                ->setStatus(sprintf('no user found for external-id %s', $externalId))
                 ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION);
         }
 
@@ -91,11 +92,12 @@ class SubscriptionHandler
      */
     public function unsubscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
+        $externalId = $crossEngageTransfer->getExternalId();
         $crossEngageTransfer = $this->crossEngageApiClient->fetchUser($crossEngageTransfer);
 
         if ($crossEngageTransfer === null) {
             return (new CrossEngageResponseTransfer())
-                ->setStatus(sprintf('no user found for external-id %s'), $crossEngageTransfer->getExternalId())
+                ->setStatus(sprintf('no user found for external-id %s', $externalId))
                 ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION);
         }
 

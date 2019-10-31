@@ -95,7 +95,7 @@ class CrossEngageControllerProvider extends AbstractYvesControllerProvider
      */
     protected function addUnsubscribe(): self
     {
-        $this->createController('/{newsletter}/unsubscribe-test', CrossEngageConstants::ROUTE_CROSS_ENGAGE_UNSUBSCRIBE, 'CrossEngage', 'Index', 'unsubscribe')
+        $this->createController('/{newsletter}/unsubscribe', CrossEngageConstants::ROUTE_CROSS_ENGAGE_UNSUBSCRIBE, 'CrossEngage', 'Index', 'unsubscribe')
             ->assert('newsletter', $this->getAllowedLocalesPattern() . 'newsletter|newsletter')
             ->value('newsletter', 'newsletter')
             ->method('GET');
