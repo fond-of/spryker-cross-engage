@@ -50,7 +50,7 @@
 
     <transfer name="CrossEngageEvent">
         <property name="event" type="string"/>
-        <property name="properties" type="array"/>
+        <property name="properties" type="string"/>
     </transfer>
 
     <transfer name="CrossEngageNewsletterEvent">
@@ -59,6 +59,10 @@
         <property name="optOutUrl" type="string"/>
         <property name="language" type="string"/>
     </transfer>
+
+
+
+
 
     <transfer name="CrossEngageResponse">
         <property name="id" type="string"/>

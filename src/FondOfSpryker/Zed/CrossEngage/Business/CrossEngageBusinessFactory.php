@@ -2,15 +2,12 @@
 
 namespace FondOfSpryker\Zed\CrossEngage\Business;
 
+use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
-use FondOfSpryker\Zed\CrossEngage\Business\Api\Model\XngDefaultHeaderModel;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
+use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageSubscriptionHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreStateMapper;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreTransferMapper;
-use FondOfSpryker\Zed\CrossEngage\Business\Subscription\SubscriptionHandler;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
 use Spryker\Shared\Kernel\Store;
@@ -22,11 +19,11 @@ use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 class CrossEngageBusinessFactory extends AbstractBusinessFactory
 {
     /**
-     * @return \FondOfSpryker\Zed\CrossEngage\Business\Subscription\SubscriptionHandler
+     * @return CrossEngageSubscriptionHandler
      */
-    public function createSubscriptionHandler(): SubscriptionHandler
+    public function createSubscriptionHandler(): CrossEngageSubscriptionHandler
     {
-        return new SubscriptionHandler(
+        return new CrossEngageSubscriptionHandler(
             $this->getConfig(),
             $this->createCrossEngageApiClient(),
             $this->createStoreTransferMapper()

@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Zed\CrossEngage\Business;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Zed\CrossEngage\Business\Subscription\SubscriptionHandler;
+use FondOfSpryker\Zed\CrossEngage\Business\Subscription\CrossEngageSubscriptionHandler;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 
@@ -20,7 +20,7 @@ class CrossEngageFacadeTest extends Unit
     protected $crossEngageBusinessFactoryMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CrossEngage\Business\Subscription\SubscriptionHandler
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CrossEngage\Business\Subscription\CrossEngageSubscriptionHandler
      */
     protected $subscriptionHandlerMock;
 
@@ -43,7 +43,7 @@ class CrossEngageFacadeTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->subscriptionHandlerMock = $this->getMockBuilder(SubscriptionHandler::class)
+        $this->subscriptionHandlerMock = $this->getMockBuilder(CrossEngageSubscriptionHandler::class)
             ->disableOriginalConstructor()
             ->getMock();
 

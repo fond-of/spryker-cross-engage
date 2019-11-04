@@ -1,6 +1,8 @@
 <?php
+
 namespace FondOfSpryker\Yves\CrossEngage;
 
+use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use FondOfSpryker\Yves\CrossEngage\Form\CrossEngageSubscriptionForm;
 use Spryker\Shared\Application\ApplicationConstants;
 use Spryker\Shared\Kernel\Store;
@@ -43,5 +45,13 @@ class CrossEngageFactory extends AbstractFactory
         $storeName = \explode('_', $this->getStore()->getStoreName());
 
         return \ucfirst(\strtolower($storeName[0]));
+    }
+
+    /**
+     * @return StoreTransferMapper
+     */
+    public function createStoreTransferMapper(): StoreTransferMapper
+    {
+        return new StoreTransferMapper($this->getStorename());
     }
 }

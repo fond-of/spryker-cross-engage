@@ -1,18 +1,20 @@
 <?php
 
-namespace FondOfSpryker\Zed\CrossEngage\Business\Subscription;
+namespace FondOfSpryker\Zed\CrossEngage\Business\Handler;
 
 use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
+use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
+use FondOfSpryker\Shared\Newsletter\NewsletterConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
+use Spryker\Shared\Url\UrlBuilder;
 
 /**
  * @method \FondOfSpryker\Zed\CrossEngage\Business\CrossEngageBusinessFactory getFactory()
  */
-class SubscriptionHandler
+class CrossEngageSubscriptionHandler
 {
     /**
      * @var \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig
@@ -34,7 +36,7 @@ class SubscriptionHandler
      *
      * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig                     $config
      * @param \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient $crossEngageApiClient
-     * @param \FondOfSpryker\Zed\CrossEngage\Business\Mapper\StateMapper           $mapper
+     * @param \FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper         $storeTransferMapper
      */
     public function __construct(
         CrossEngageConfig $config,
@@ -59,7 +61,9 @@ class SubscriptionHandler
             return $this->crossEngageApiClient->createUser($crossEngageTransfer);
         }
 
-        return new CrossEngageResponseTransfer();
+        return (new CrossEngageResponseTransfer())
+            ->setStatus(sprintf('user (%s) already exists', $crossEngageTransfer->getEmail()))
+            ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_ALREADY_SUBSCRIBED);
     }
 
     /**

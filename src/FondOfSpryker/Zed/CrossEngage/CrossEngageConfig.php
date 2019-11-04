@@ -23,25 +23,6 @@ class CrossEngageConfig extends AbstractBundleConfig
         return $this->get(CrossEngageConstants::CROSS_ENGAGE_URL);
     }
 
-    /**
-     * @param string $locale
-     *
-     * @return int
-     */
-    public function getFormId(string $locale): int
-    {
-        return $this->getLocalized(CrossEngageConstants::CROSS_ENGAGE_FORM_ID, $locale);
-    }
-
-    /**
-     * @param string $locale
-     *
-     * @return int
-     */
-    public function getListId(string $locale): int
-    {
-        return $this->getLocalized(CrossEngageConstants::CROSS_ENGAGE_LIST_ID, $locale);
-    }
 
     /**
      * @param string $locale

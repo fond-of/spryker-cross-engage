@@ -3,10 +3,10 @@
 namespace FondOfSpryker\Zed\CrossEngage\Business\Api;
 
 use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
+use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
+use FondOfSpryker\Shared\Newsletter\NewsletterConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreStateMapper;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
@@ -109,7 +109,7 @@ class CrossEngageUserApiClient
 
         $crossEngageResponseTransfer = new CrossEngageResponseTransfer();
         $crossEngageResponseTransfer->setStatus(sprintf('user created with ID %s', \sha1($crossEngageTransfer->getEmail())));
-        $crossEngageResponseTransfer->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE);
+        $crossEngageResponseTransfer->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_SUBSCRIBE_SUCCESS);
 
         return $crossEngageResponseTransfer;
     }

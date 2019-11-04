@@ -6,6 +6,7 @@ namespace FondOfSpryker\Zed\CrossEngage\Business\Api;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
 use Generated\Shared\Transfer\CrossEngageBaseEventTransfer;
+use Generated\Shared\Transfer\CrossEngageEventTransfer;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -34,7 +35,7 @@ class CrossEngageEventApiClient
     }
 
     /**
-     * @param CrossEngageBaseEventTransfer $eventTransfer
+     * @param CrossEngageEventTransfer $eventTransfer
      *
      * @return bool
      */

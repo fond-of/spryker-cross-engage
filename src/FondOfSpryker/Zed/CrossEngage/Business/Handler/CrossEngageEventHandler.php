@@ -4,7 +4,7 @@ namespace FondOfSpryker\Zed\CrossEngage\Business\Handler;
 
 use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreTransferMapper;
+use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use Generated\Shared\Transfer\CrossEngageBaseEventTransfer;
 use Generated\Shared\Transfer\CrossEngageEventTransfer;
 use Generated\Shared\Transfer\CrossEngageNewsletterEventTransfer;
@@ -46,11 +46,34 @@ class CrossEngageEventHandler
             return false;
         }
 
+        $crossEngageNewsletterEventTransfer = new CrossEngageNewsletterEventTransfer();
+        $crossEngageNewsletterEventTransfer
+            ->setEmailNewsletter($this->storeTransferMapper->getStorename())
+            ->setLanguage($crossEngageTransfer->getLanguage());
+
         $crossEngageEventTransfer = new CrossEngageEventTransfer();
-        $crossEngageEventTransfer->setEvent('Opt In');
+        $crossEngageEventTransfer
+            ->setEvent('Opt In')
+            ->setProperties($crossEngageNewsletterEventTransfer);
+
+        $crossEngageBaseEventTransfer = $this->createCrossEngageBaseEventTransfer($crossEngageTransfer);
+        $crossEngageBaseEventTransfer->addEvents($crossEngageEventTransfer);
+
+        return $this->eventApiClient->postEvent($crossEngageBaseEventTransfer);
+    }
+
+    /**
+     * @param CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return bool
+     */
+    public function optOut(CrossEngageTransfer $crossEngageTransfer): bool
+    {
+        $crossEngageEventTransfer = new CrossEngageEventTransfer();
+        $crossEngageEventTransfer->setEvent('Opt Out');
         $crossEngageEventTransfer->setProperties(
             [
-            'newsletter' => $this->createCrossEngageNewsletterEvent($crossEngageTransfer)->toArray(true, true)
+                $this->createCrossEngageNewsletterEvent($crossEngageTransfer)->toArray(true, true)
             ]
         );
 
@@ -67,26 +90,14 @@ class CrossEngageEventHandler
     /**
      * @param CrossEngageTransfer $crossEngageTransfer
      *
-     * @return bool
+     * @return CrossEngageBaseEventTransfer
      */
-    public function optOut(CrossEngageTransfer $crossEngageTransfer): bool
+    protected function createCrossEngageBaseEventTransfer(CrossEngageTransfer $crossEngageTransfer): CrossEngageBaseEventTransfer
     {
-        $crossEngageEventTransfer = new CrossEngageEventTransfer();
-        $crossEngageEventTransfer->setEvent('Opt Out');
-        $crossEngageEventTransfer->setProperties(
-            [
-            'newsletter' => $this->createCrossEngageNewsletterEvent($crossEngageTransfer)->toArray(true, true)
-            ]
-        );
+        $crossEngageBaseEvent = new CrossEngageBaseEventTransfer();
+        $crossEngageBaseEvent->setId(\sha1($crossEngageTransfer->getEmail()));
 
-        $eventsCollection = new \ArrayObject();
-        $eventsCollection->append($crossEngageEventTransfer);
-
-        $crossEngageBaseEventTransfer = (new CrossEngageBaseEventTransfer())
-            ->setId(\sha1($crossEngageTransfer->getEmail()))
-            ->setEvents($eventsCollection);
-
-        return $this->eventApiClient->postEvent($crossEngageBaseEventTransfer);
+        return $crossEngageBaseEvent;
     }
 
     /**

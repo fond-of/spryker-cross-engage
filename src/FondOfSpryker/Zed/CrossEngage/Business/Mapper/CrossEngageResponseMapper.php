@@ -4,7 +4,7 @@
 namespace FondOfSpryker\Zed\CrossEngage\Business\Mapper;
 
 
-use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
+use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 
