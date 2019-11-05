@@ -52,6 +52,7 @@ class CrossEngageSubscriptionHandler
      * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
      *
      * @return CrossEngageResponseTransfer
+     * @throws \Exception
      */
     public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
@@ -61,8 +62,10 @@ class CrossEngageSubscriptionHandler
             return $this->crossEngageApiClient->createUser($crossEngageTransfer);
         }
 
-        if ($this->storeTransferMapper->getNumericState($crossEngageTransfer) <= 1) {
-            return $this->crossEngageApiClient->updateUser($crossEngageTransfer);
+        if ($this->storeTransferMapper->getEmailState($crossEngageTransfer) === CrossEngageConstants::XNG_STATE_UNSUBSCRIBED) {
+            return $this->crossEngageApiClient->updateUser(
+                $this->storeTransferMapper->updateEmailState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_NEW)
+            );
         }
 
         return (new CrossEngageResponseTransfer())
