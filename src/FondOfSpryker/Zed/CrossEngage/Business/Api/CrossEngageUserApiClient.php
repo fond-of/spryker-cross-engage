@@ -122,7 +122,7 @@ class CrossEngageUserApiClient
      */
     public function updateUser(CrossEngageTransfer $crossEngageTransfer, array $options = []): CrossEngageResponseTransfer
     {
-        return new CrossEngageResponseTransfer();
+        return $this->createUser($crossEngageTransfer, $options);
     }
 
     /**

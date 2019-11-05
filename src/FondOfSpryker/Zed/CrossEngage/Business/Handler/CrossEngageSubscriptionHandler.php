@@ -61,6 +61,10 @@ class CrossEngageSubscriptionHandler
             return $this->crossEngageApiClient->createUser($crossEngageTransfer);
         }
 
+        if ($this->storeTransferMapper->getNumericState($crossEngageTransfer) <= 1) {
+            return $this->crossEngageApiClient->updateUser($crossEngageTransfer);
+        }
+
         return (new CrossEngageResponseTransfer())
             ->setStatus(sprintf('user (%s) already exists', $crossEngageTransfer->getEmail()))
             ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_ALREADY_SUBSCRIBED);
