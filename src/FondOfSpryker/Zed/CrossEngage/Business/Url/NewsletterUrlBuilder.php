@@ -16,6 +16,7 @@ class NewsletterUrlBuilder
 
     /**
      * NewsletterUrlBuilder constructor.
+     *
      * @param CrossEngageConfig $config
      */
     public function __construct(CrossEngageConfig $config)
@@ -24,7 +25,7 @@ class NewsletterUrlBuilder
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
+     * @param  CrossEngageTransfer $crossEngageTransfer
      * @return string
      */
     public function buildOptInUrl(CrossEngageTransfer $crossEngageTransfer): string
@@ -33,7 +34,7 @@ class NewsletterUrlBuilder
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
+     * @param  CrossEngageTransfer $crossEngageTransfer
      * @return string
      */
     public function buildOptOutUrl(CrossEngageTransfer $crossEngageTransfer): string
@@ -42,8 +43,8 @@ class NewsletterUrlBuilder
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
-     * @param string $pathSegment
+     * @param  CrossEngageTransfer $crossEngageTransfer
+     * @param  string              $pathSegment
      * @return string
      */
     protected function build(CrossEngageTransfer $crossEngageTransfer, string $pathSegment): string

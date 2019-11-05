@@ -31,8 +31,8 @@ class CrossEngageEventHandler
 
     /**
      * @param CrossEngageEventApiClient $eventApiClient
-     * @param StoreTransferMapper $storeTransferMapper
-     * @param UrlBuilderInterface $urlBuilder
+     * @param StoreTransferMapper       $storeTransferMapper
+     * @param UrlBuilderInterface       $urlBuilder
      */
     public function __construct(
         CrossEngageEventApiClient $eventApiClient,

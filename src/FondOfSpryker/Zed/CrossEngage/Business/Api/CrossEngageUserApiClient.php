@@ -220,6 +220,6 @@ class CrossEngageUserApiClient
      */
     protected function updateEmailNewsletterState(CrossEngageTransfer $crossEngageTransfer, string $state): CrossEngageTransfer
     {
-       return $this->storeTransferMapper->updateEmailState($crossEngageTransfer, $state);
+        return $this->storeTransferMapper->updateEmailState($crossEngageTransfer, $state);
     }
 }

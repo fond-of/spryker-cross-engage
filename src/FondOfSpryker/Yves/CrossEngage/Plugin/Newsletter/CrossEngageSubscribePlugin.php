@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSubscribePluginInterface
 {
     /**
-     * @param string $email
-     * @param Request $request
+     * @param  string  $email
+     * @param  Request $request
      * @return NewsletterResponseTransfer
      * @throws \Exception
      */
@@ -47,7 +47,7 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
     }
 
     /**
-     * @param string $externalId
+     * @param  string $externalId
      * @return NewsletterResponseTransfer
      */
     public function confirmSubscription(string $externalId): NewsletterResponseTransfer
