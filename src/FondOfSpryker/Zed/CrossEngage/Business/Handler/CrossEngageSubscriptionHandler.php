@@ -79,7 +79,7 @@ class CrossEngageSubscriptionHandler
         if ($crossEngageTransfer === null) {
             return (new CrossEngageResponseTransfer())
                 ->setStatus(sprintf('no user found for external-id %s', $externalId))
-                ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_CONFIRM_SUBSCRIPTION);
+                ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_CONFIRM_SUBSCRIPTION);
         }
 
         if ($crossEngageTransfer instanceof CrossEngageTransfer) {

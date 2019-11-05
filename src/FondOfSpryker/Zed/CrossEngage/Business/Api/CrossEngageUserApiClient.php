@@ -134,7 +134,9 @@ class CrossEngageUserApiClient
     protected function putUser(CrossEngageTransfer $crossEngageTransfer, $options = []): bool
     {
         try {
-            $json = json_encode($crossEngageTransfer->toArray(false, true));
+            $bodyArray = $crossEngageTransfer->toArray(false, true);
+            unset($bodyArray['host']); // TODO: Using CrossEngageApiTransfer instead
+            $json = json_encode($bodyArray);
 
             $response = $this->guzzleClient->put(
                 $this->config->getCrossEngageApiUriCreateUser(\sha1($crossEngageTransfer->getEmail())),
@@ -145,10 +147,6 @@ class CrossEngageUserApiClient
                     ['body' => $json]
                 )
             );
-
-            $code = $response->getStatusCode();
-            $res = Response::HTTP_OK;
-            $a = $code === $res;
 
             return $response->getStatusCode() === Response::HTTP_OK;
         } catch (RequestException $e) {
@@ -222,6 +220,6 @@ class CrossEngageUserApiClient
      */
     protected function updateEmailNewsletterState(CrossEngageTransfer $crossEngageTransfer, string $state): CrossEngageTransfer
     {
-        return $this->storeTransferMapper->updateEmailState($crossEngageTransfer, $state);
+       return $this->storeTransferMapper->updateEmailState($crossEngageTransfer, $state);
     }
 }

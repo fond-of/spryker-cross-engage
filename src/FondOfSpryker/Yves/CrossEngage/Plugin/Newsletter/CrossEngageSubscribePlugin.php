@@ -32,7 +32,8 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
             ->setEmail($email)
             ->setExternalId(\sha1($email))
             ->setLanguage(\explode('_', $this->getLocale())[0])
-            ->setBusinessUnit($this->getLocale());
+            ->setBusinessUnit($this->getLocale())
+            ->setHost($request->getSchemeAndHttpHost());
 
         $xngTransfer = $mapper->setEmailState($xngTransfer, CrossEngageConstants::XNG_STATE_NEW);
         $xngTransfer = $mapper->setEmailOptInSource($xngTransfer);
@@ -40,6 +41,37 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
         $xngTransfer = $mapper->setIp($xngTransfer, $request->getClientIp());
 
         $xngResponse = $this->getClient()->subscribe($xngTransfer);
+
+        return (new NewsletterResponseTransfer())
+            ->fromArray($xngResponse->toArray(), true);
+    }
+
+    /**
+     * @param string $externalId
+     * @return NewsletterResponseTransfer
+     */
+    public function confirmSubscription(string $externalId): NewsletterResponseTransfer
+    {
+        $xngTransfer = new CrossEngageTransfer();
+        $xngTransfer->setExternalId($externalId);
+
+        $xngResponse = $this->getClient()->confirmSubscription($xngTransfer);
+
+        return (new NewsletterResponseTransfer())
+            ->fromArray($xngResponse->toArray(), true);
+    }
+
+    /**
+     * @param string $externalId
+     *
+     * @return NewsletterResponseTransfer
+     */
+    public function unsubscribe(string $externalId): NewsletterResponseTransfer
+    {
+        $xngTransfer = new CrossEngageTransfer();
+        $xngTransfer->setExternalId($externalId);
+
+        $xngResponse = $this->getClient()->unsubscribe($xngTransfer);
 
         return (new NewsletterResponseTransfer())
             ->fromArray($xngResponse->toArray(), true);

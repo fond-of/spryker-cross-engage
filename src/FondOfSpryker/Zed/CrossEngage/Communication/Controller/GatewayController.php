@@ -18,7 +18,7 @@ class GatewayController extends AbstractGatewayController
      */
     public function subscribeAction(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
-        return $this->getFacade()->subscribeToCrossEngage($crossEngageTransfer);
+        return $this->getFacade()->subscribe($crossEngageTransfer);
     }
 
     /**
@@ -28,7 +28,7 @@ class GatewayController extends AbstractGatewayController
      */
     public function confirmSubscriptionAction(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
-        return $this->getFacade()->confirmSubscriptionToCrossEngage($crossEngageTransfer);
+        return $this->getFacade()->confirmSubscription($crossEngageTransfer);
     }
 
     /**
@@ -38,6 +38,6 @@ class GatewayController extends AbstractGatewayController
      */
     public function unsubscribeAction(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
-        return $this->getFacade()->unsubscribeToCrossEngage($crossEngageTransfer);
+        return $this->getFacade()->unsubscribe($crossEngageTransfer);
     }
 }

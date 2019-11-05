@@ -5,10 +5,12 @@ namespace FondOfSpryker\Zed\CrossEngage\Business\Handler;
 use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
+use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
 use Generated\Shared\Transfer\CrossEngageBaseEventTransfer;
 use Generated\Shared\Transfer\CrossEngageEventTransfer;
 use Generated\Shared\Transfer\CrossEngageNewsletterEventTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
+use Spryker\Shared\Url\UrlBuilderInterface;
 
 class CrossEngageEventHandler
 {
@@ -22,17 +24,24 @@ class CrossEngageEventHandler
      */
     protected $storeTransferMapper;
 
+    /**
+     * @var UrlBuilderInterface
+     */
+    protected $urlBuilder;
 
     /**
      * @param CrossEngageEventApiClient $eventApiClient
-     * @param StoreTransferMapper       $storeTransferMapper
+     * @param StoreTransferMapper $storeTransferMapper
+     * @param UrlBuilderInterface $urlBuilder
      */
     public function __construct(
         CrossEngageEventApiClient $eventApiClient,
-        StoreTransferMapper $storeTransferMapper
+        StoreTransferMapper $storeTransferMapper,
+        NewsletterUrlBuilder $urlBuilder
     ) {
         $this->eventApiClient = $eventApiClient;
         $this->storeTransferMapper = $storeTransferMapper;
+        $this->urlBuilder = $urlBuilder;
     }
 
     /**
@@ -49,7 +58,9 @@ class CrossEngageEventHandler
         $crossEngageNewsletterEventTransfer = new CrossEngageNewsletterEventTransfer();
         $crossEngageNewsletterEventTransfer
             ->setEmailNewsletter($this->storeTransferMapper->getStorename())
-            ->setLanguage($crossEngageTransfer->getLanguage());
+            ->setLanguage($crossEngageTransfer->getLanguage())
+            ->setOptInUrl($this->urlBuilder->buildOptInUrl($crossEngageTransfer))
+            ->setOptOutUrl($this->urlBuilder->buildOptOutUrl($crossEngageTransfer));
 
         $crossEngageEventTransfer = new CrossEngageEventTransfer();
         $crossEngageEventTransfer

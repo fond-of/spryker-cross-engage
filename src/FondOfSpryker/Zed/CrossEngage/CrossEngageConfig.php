@@ -135,4 +135,21 @@ class CrossEngageConfig extends AbstractBundleConfig
             ],
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function getOptInPathSegement(): string
+    {
+        return $this->get(CrossEngageConstants::OPT_IN_PATH_SEGMENT, 'confirm-subscription');
+    }
+
+    /**
+     * @return string
+     */
+    public function getOptOutPathSegement(): string
+    {
+        return $this->get(CrossEngageConstants::OPT_OUT_PATH_SEGMENT, 'unsubscribe');
+    }
+
 }

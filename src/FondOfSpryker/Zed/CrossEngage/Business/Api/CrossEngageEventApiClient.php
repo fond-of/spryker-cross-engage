@@ -42,6 +42,8 @@ class CrossEngageEventApiClient
     public function postEvent(CrossEngageBaseEventTransfer $eventTransfer): bool
     {
         try {
+            $body = json_encode($eventTransfer->toArray(true, true));
+
             $response = $this->guzzleClient->post(
                 $this->config->getCrossEngageApiUriEvents(),
                 array_merge(

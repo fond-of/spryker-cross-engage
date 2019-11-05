@@ -8,6 +8,7 @@ use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageSubscriptionHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper;
+use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
 use Spryker\Shared\Kernel\Store;
@@ -55,14 +56,6 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CrossEngage\Business\Api\Model\XngDefaultHeaderModel
-     */
-    public function createXngDefaultHeaderModel(): XngDefaultHeaderModel
-    {
-        return new XngDefaultHeaderModel($this->getConfig());
-    }
-
-    /**
      * @return \Spryker\Shared\Kernel\Store
      */
     public function getStore(): Store
@@ -98,7 +91,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     {
         return new CrossEngageEventHandler(
             $this->createCrossEngageEventApiClient(),
-            $this->createStoreTransferMapper()
+            $this->createStoreTransferMapper(),
+            $this->createUrlBuilder()
         );
     }
 
@@ -119,5 +113,13 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     protected function createStoreTransferMapper(): StoreTransferMapper
     {
         return new StoreTransferMapper($this->getStorename());
+    }
+
+    /**
+     * @return NewsletterUrlBuilder
+     */
+    protected function createUrlBuilder(): NewsletterUrlBuilder
+    {
+        return new NewsletterUrlBuilder($this->getConfig());
     }
 }
