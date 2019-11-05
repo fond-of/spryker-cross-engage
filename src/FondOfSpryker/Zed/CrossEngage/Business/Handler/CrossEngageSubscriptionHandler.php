@@ -93,7 +93,8 @@ class CrossEngageSubscriptionHandler
             $this->crossEngageApiClient->confirmSubscription($crossEngageTransfer, CrossEngageConstants::XNG_STATE_SUBSCRIBED);
         }
 
-        return new CrossEngageResponseTransfer();
+        return (new CrossEngageResponseTransfer())
+            ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_FAILURE);
     }
 
     /**
@@ -116,6 +117,7 @@ class CrossEngageSubscriptionHandler
             $this->crossEngageApiClient->unsubscribe($crossEngageTransfer, CrossEngageConstants::XNG_STATE_UNSUBSCRIBED);
         }
 
-        return new CrossEngageResponseTransfer();
+        return (new CrossEngageResponseTransfer())
+            ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_FAILURE);
     }
 }
