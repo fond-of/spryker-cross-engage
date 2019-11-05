@@ -41,7 +41,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->createCrossEngageResponseMapper(),
             $this->createCrossEngageEventHandler(),
-            $this->createStoreTransferMapper()
+            $this->createStoreTransferMapper(),
+            $this->getConfig()
         );
     }
 
@@ -92,7 +93,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
         return new CrossEngageEventHandler(
             $this->createCrossEngageEventApiClient(),
             $this->createStoreTransferMapper(),
-            $this->createUrlBuilder()
+            $this->createUrlBuilder(),
+            $this->getConfig()
         );
     }
 

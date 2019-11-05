@@ -6,6 +6,7 @@ use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
+use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use Generated\Shared\Transfer\CrossEngageBaseEventTransfer;
 use Generated\Shared\Transfer\CrossEngageEventTransfer;
 use Generated\Shared\Transfer\CrossEngageNewsletterEventTransfer;
@@ -30,18 +31,26 @@ class CrossEngageEventHandler
     protected $urlBuilder;
 
     /**
+     * @var CrossEngageConfig
+     */
+    protected $config;
+
+    /**
      * @param CrossEngageEventApiClient $eventApiClient
-     * @param StoreTransferMapper       $storeTransferMapper
-     * @param UrlBuilderInterface       $urlBuilder
+     * @param StoreTransferMapper $storeTransferMapper
+     * @param NewsletterUrlBuilder $urlBuilder
+     * @param CrossEngageConfig $config
      */
     public function __construct(
         CrossEngageEventApiClient $eventApiClient,
         StoreTransferMapper $storeTransferMapper,
-        NewsletterUrlBuilder $urlBuilder
+        NewsletterUrlBuilder $urlBuilder,
+        CrossEngageConfig $config
     ) {
         $this->eventApiClient = $eventApiClient;
         $this->storeTransferMapper = $storeTransferMapper;
         $this->urlBuilder = $urlBuilder;
+        $this->config = $config;
     }
 
     /**
@@ -55,9 +64,12 @@ class CrossEngageEventHandler
             return false;
         }
 
+        $emailNewsletter = strtolower($this->config->getStore()->getStoreName());
+        $emailNewsletter.= '-' . strtolower($crossEngageTransfer->getBusinessUnit());
+
         $crossEngageNewsletterEventTransfer = new CrossEngageNewsletterEventTransfer();
         $crossEngageNewsletterEventTransfer
-            ->setEmailNewsletter($this->storeTransferMapper->getStorename())
+            ->setEmailNewsletter($emailNewsletter)
             ->setLanguage($crossEngageTransfer->getLanguage())
             ->setOptInUrl($this->urlBuilder->buildOptInUrl($crossEngageTransfer))
             ->setOptOutUrl($this->urlBuilder->buildOptOutUrl($crossEngageTransfer));

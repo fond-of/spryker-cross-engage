@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\CrossEngage;
 
 use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class CrossEngageConfig extends AbstractBundleConfig
@@ -23,6 +24,13 @@ class CrossEngageConfig extends AbstractBundleConfig
         return $this->get(CrossEngageConstants::CROSS_ENGAGE_URL);
     }
 
+    /**
+     * @return \Spryker\Shared\Kernel\Store
+     */
+    public function getStore(): Store
+    {
+        return Store::getInstance();
+    }
 
     /**
      * @param string $locale
