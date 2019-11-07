@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Zed\CrossEngage\Business;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Zed\CrossEngage\Business\Subscription\CrossEngageSubscriptionHandler;
+use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageSubscriptionHandler;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 
@@ -20,7 +20,7 @@ class CrossEngageFacadeTest extends Unit
     protected $crossEngageBusinessFactoryMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CrossEngage\Business\Subscription\CrossEngageSubscriptionHandler
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageSubscriptionHandler
      */
     protected $subscriptionHandlerMock;
 
@@ -43,15 +43,16 @@ class CrossEngageFacadeTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->subscriptionHandlerMock = $this->getMockBuilder(CrossEngageSubscriptionHandler::class)
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->crossEngageTransferMock = $this->getMockBuilder(CrossEngageTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->crossEngageResponseTransferMock = $this->getMockBuilder(CrossEngageResponseTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->subscriptionHandlerMock = $this->getMockBuilder(CrossEngageSubscriptionHandler::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -62,27 +63,27 @@ class CrossEngageFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testSubscribeToCrossEngage(): void
+    public function testSubscribe(): void
     {
         $this->crossEngageBusinessFactoryMock->expects($this->atLeastOnce())
             ->method('createSubscriptionHandler')
             ->willReturn($this->subscriptionHandlerMock);
 
         $this->subscriptionHandlerMock->expects($this->atLeastOnce())
-            ->method('processNewsletterSubscriptions')
+            ->method('subscribe')
             ->with($this->crossEngageTransferMock)
             ->willReturn($this->crossEngageResponseTransferMock);
 
         $this->assertInstanceOf(
             CrossEngageResponseTransfer::class,
-            $this->crossEngageFacade->subscribeToCrossEngage($this->crossEngageTransferMock)
+            $this->crossEngageFacade->subscribe($this->crossEngageTransferMock)
         );
     }
 
     /**
      * @return void
      */
-    public function testConfirmSubscriptionToCrossEngage(): void
+    public function testConfirmSubscription(): void
     {
         $this->crossEngageBusinessFactoryMock->expects($this->atLeastOnce())
             ->method('createSubscriptionHandler')
@@ -95,7 +96,27 @@ class CrossEngageFacadeTest extends Unit
 
         $this->assertInstanceOf(
             CrossEngageResponseTransfer::class,
-            $this->crossEngageFacade->confirmSubscriptionToCrossEngage($this->crossEngageTransferMock)
+            $this->crossEngageFacade->confirmSubscription($this->crossEngageTransferMock)
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testUnsubscribe(): void
+    {
+        $this->crossEngageBusinessFactoryMock->expects($this->atLeastOnce())
+            ->method('createSubscriptionHandler')
+            ->willReturn($this->subscriptionHandlerMock);
+
+        $this->subscriptionHandlerMock->expects($this->atLeastOnce())
+            ->method('unsubscribe')
+            ->with($this->crossEngageTransferMock)
+            ->willReturn($this->crossEngageResponseTransferMock);
+
+        $this->assertInstanceOf(
+            CrossEngageResponseTransfer::class,
+            $this->crossEngageFacade->unsubscribe($this->crossEngageTransferMock)
         );
     }
 }

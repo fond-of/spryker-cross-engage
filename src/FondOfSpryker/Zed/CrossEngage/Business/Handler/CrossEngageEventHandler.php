@@ -7,10 +7,12 @@ use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
+use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToStoreFacadeInterface;
 use Generated\Shared\Transfer\CrossEngageBaseEventTransfer;
 use Generated\Shared\Transfer\CrossEngageEventTransfer;
 use Generated\Shared\Transfer\CrossEngageNewsletterEventTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\Url\UrlBuilderInterface;
 
 class CrossEngageEventHandler
@@ -36,21 +38,29 @@ class CrossEngageEventHandler
     protected $config;
 
     /**
-     * @param CrossEngageEventApiClient $eventApiClient
-     * @param StoreTransferMapper $storeTransferMapper
-     * @param NewsletterUrlBuilder $urlBuilder
-     * @param CrossEngageConfig $config
+     * @var CrossEngageToStoreFacadeInterface
+     */
+    protected $storeFacade;
+
+    /**
+     * @param CrossEngageEventApiClient         $eventApiClient
+     * @param StoreTransferMapper               $storeTransferMapper
+     * @param NewsletterUrlBuilder              $urlBuilder
+     * @param CrossEngageToStoreFacadeInterface $storeFacade
+     * @param CrossEngageConfig                 $config
      */
     public function __construct(
         CrossEngageEventApiClient $eventApiClient,
         StoreTransferMapper $storeTransferMapper,
         NewsletterUrlBuilder $urlBuilder,
+        CrossEngageToStoreFacadeInterface $storeFacade,
         CrossEngageConfig $config
     ) {
         $this->eventApiClient = $eventApiClient;
         $this->storeTransferMapper = $storeTransferMapper;
         $this->urlBuilder = $urlBuilder;
         $this->config = $config;
+        $this->storeFacade = $storeFacade;
     }
 
     /**
@@ -64,7 +74,7 @@ class CrossEngageEventHandler
             return false;
         }
 
-        $emailNewsletter = strtolower($this->config->getStore()->getStoreName());
+        $emailNewsletter = strtolower($this->storeFacade->getCurrentStore()->getName());
         $emailNewsletter.= '-' . strtolower($crossEngageTransfer->getBusinessUnit());
 
         $crossEngageNewsletterEventTransfer = new CrossEngageNewsletterEventTransfer();

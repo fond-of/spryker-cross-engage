@@ -14,7 +14,8 @@ class CrossEngageFacade extends AbstractFacade implements CrossEngageFacadeInter
     /**
      * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
      *
-     * @return void
+     * @return CrossEngageResponseTransfer
+     * @throws
      */
     public function subscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {

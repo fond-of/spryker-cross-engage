@@ -6,6 +6,9 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
+use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
+use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\Kernel\Container;
 
 class CrossEngageBusinessFactoryTest extends Unit
@@ -29,6 +32,11 @@ class CrossEngageBusinessFactoryTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Zed\Kernel\Container
      */
     protected $containerMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
+     */
+    protected $guzzleClientMock;
 
     /**
      * @var \FondOfSpryker\Zed\CrossEngage\Business\CrossEngageBusinessFactory
@@ -62,6 +70,31 @@ class CrossEngageBusinessFactoryTest extends Unit
 
     public function testCreateSubscriptionHandler(): void
     {
+        $guzzleClientMock = $this->getMockBuilder(CrossEngageToGuzzleInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
+
+        $this->containerMock->expects($this->atLeastOnce())
+            ->method('offsetExists')
+            ->withConsecutive(
+                [CrossEngageDependencyProvider::CLIENT_GUZZLE],
+                [CrossEngageDependencyProvider::STORE]
+            )
+            ->willReturn(true);
+
+        $this->containerMock->expects($this->atLeastOnce())
+            ->method('offsetGet')
+            ->withConsecutive(
+                [CrossEngageDependencyProvider::CLIENT_GUZZLE],
+                [CrossEngageDependencyProvider::STORE]
+            )
+            ->willReturnOnConsecutiveCalls(
+                $guzzleClientMock
+            );
+
+        $subscriptionHandler = $this->crossEngageBusinessFactory->createSubscriptionHandler();
+
+        //$this->assertInstanceOf(CrossEngageUserApiClient::class, $subscriptionHandler);
     }
 }

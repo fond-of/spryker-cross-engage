@@ -7,10 +7,10 @@ use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageSubscriptionHandler;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
+use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToStoreFacadeInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
@@ -39,10 +39,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
         return new CrossEngageUserApiClient(
             $this->getGuzzleClient(),
             $this->getConfig(),
-            $this->createCrossEngageResponseMapper(),
             $this->createCrossEngageEventHandler(),
-            $this->createStoreTransferMapper(),
-            $this->getConfig()
+            $this->createStoreTransferMapper()
         );
     }
 
@@ -57,11 +55,13 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Shared\Kernel\Store
+     * @return CrossEngageToStoreFacadeInterface
+     *
+     * @throws
      */
-    public function getStore(): Store
+    public function getStoreFacade(): CrossEngageToStoreFacadeInterface
     {
-        return Store::getInstance();
+        return $this->getProvidedDependency(CrossEngageDependencyProvider::STORE_FACADE);
     }
 
     /**
@@ -69,20 +69,10 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
      */
     protected function getStorename(): string
     {
-        $storeName = \explode('_', $this->getStore()->getStoreName());
+        //$storeName = \explode('_', $this->getStore()->getStoreName());
+        $storeName = \explode('_', $this->getStoreFacade()->getCurrentStore()->getName());
 
         return \ucfirst(\strtolower($storeName[0]));
-    }
-
-    /**
-     * @return CrossEngageResponseMapper
-     */
-    protected function createCrossEngageResponseMapper()
-    {
-        return new CrossEngageResponseMapper(
-            $this->createStoreTransferMapper(),
-            $this->getStorename()
-        );
     }
 
     /**
@@ -94,6 +84,7 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
             $this->createCrossEngageEventApiClient(),
             $this->createStoreTransferMapper(),
             $this->createUrlBuilder(),
+            $this->getStoreFacade(),
             $this->getConfig()
         );
     }

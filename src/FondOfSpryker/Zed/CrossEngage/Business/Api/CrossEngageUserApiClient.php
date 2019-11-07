@@ -27,11 +27,6 @@ class CrossEngageUserApiClient
     protected $config;
 
     /**
-     * @var CrossEngageResponseMapper
-     */
-    protected $responseMapper;
-
-    /**
      * @var CrossEngageEventHandler
      */
     protected $engageEventHandler;
@@ -44,20 +39,17 @@ class CrossEngageUserApiClient
     /**
      * @param \FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface $guzzleClient
      * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig                                        $config
-     * @param \FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper                $responseMapper
      * @param CrossEngageEventHandler                                                                 $engageEventHandler
      * @param StoreTransferMapper                                                                     $storeTransferMapper
      */
     public function __construct(
         CrossEngageToGuzzleInterface $guzzleClient,
         CrossEngageConfig $config,
-        CrossEngageResponseMapper $responseMapper,
         CrossEngageEventHandler $engageEventHandler,
         StoreTransferMapper $storeTransferMapper
     ) {
         $this->guzzleClient = $guzzleClient;
         $this->config = $config;
-        $this->responseMapper = $responseMapper;
         $this->engageEventHandler = $engageEventHandler;
         $this->storeTransferMapper = $storeTransferMapper;
     }
