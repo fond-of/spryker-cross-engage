@@ -10,8 +10,9 @@ use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageSubscriptionHandle
 use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
+use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToNewsletterFacadeInterface;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToStoreFacadeInterface;
-use Spryker\Shared\Kernel\Store;
+use FondOfSpryker\Zed\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -40,7 +41,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
             $this->getGuzzleClient(),
             $this->getConfig(),
             $this->createCrossEngageEventHandler(),
-            $this->createStoreTransferMapper()
+            $this->createStoreTransferMapper(),
+            $this->getNewsletterService()
         );
     }
 
@@ -65,11 +67,19 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return CrossEngageToNewsletterServiceInterface
+     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
+     */
+    public function getNewsletterService(): CrossEngageToNewsletterServiceInterface
+    {
+        return $this->getProvidedDependency(CrossEngageDependencyProvider::NEWSLETTER_SERVICE);
+    }
+
+    /**
      * @return string
      */
     protected function getStorename(): string
     {
-        //$storeName = \explode('_', $this->getStore()->getStoreName());
         $storeName = \explode('_', $this->getStoreFacade()->getCurrentStore()->getName());
 
         return \ucfirst(\strtolower($storeName[0]));
@@ -83,9 +93,9 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
         return new CrossEngageEventHandler(
             $this->createCrossEngageEventApiClient(),
             $this->createStoreTransferMapper(),
-            $this->createUrlBuilder(),
             $this->getStoreFacade(),
-            $this->getConfig()
+            $this->getConfig(),
+            $this->getNewsletterService()
         );
     }
 
@@ -106,13 +116,5 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     protected function createStoreTransferMapper(): StoreTransferMapper
     {
         return new StoreTransferMapper($this->getStorename());
-    }
-
-    /**
-     * @return NewsletterUrlBuilder
-     */
-    protected function createUrlBuilder(): NewsletterUrlBuilder
-    {
-        return new NewsletterUrlBuilder($this->getConfig());
     }
 }

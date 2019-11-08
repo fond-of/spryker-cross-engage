@@ -3,17 +3,17 @@
 namespace FondOfSpryker\Zed\CrossEngage\Business\Handler;
 
 use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
+use FondOfSpryker\Shared\Newsletter\NewsletterConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToStoreFacadeInterface;
+use FondOfSpryker\Zed\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceInterface;
 use Generated\Shared\Transfer\CrossEngageBaseEventTransfer;
 use Generated\Shared\Transfer\CrossEngageEventTransfer;
 use Generated\Shared\Transfer\CrossEngageNewsletterEventTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
-use Spryker\Shared\Kernel\Store;
-use Spryker\Shared\Url\UrlBuilderInterface;
 
 class CrossEngageEventHandler
 {
@@ -28,11 +28,6 @@ class CrossEngageEventHandler
     protected $storeTransferMapper;
 
     /**
-     * @var UrlBuilderInterface
-     */
-    protected $urlBuilder;
-
-    /**
      * @var CrossEngageConfig
      */
     protected $config;
@@ -43,24 +38,28 @@ class CrossEngageEventHandler
     protected $storeFacade;
 
     /**
+     * @var CrossEngageToNewsletterServiceInterface
+     */
+    protected $newsletterService;
+
+    /**
      * @param CrossEngageEventApiClient         $eventApiClient
      * @param StoreTransferMapper               $storeTransferMapper
-     * @param NewsletterUrlBuilder              $urlBuilder
      * @param CrossEngageToStoreFacadeInterface $storeFacade
      * @param CrossEngageConfig                 $config
      */
     public function __construct(
         CrossEngageEventApiClient $eventApiClient,
         StoreTransferMapper $storeTransferMapper,
-        NewsletterUrlBuilder $urlBuilder,
         CrossEngageToStoreFacadeInterface $storeFacade,
-        CrossEngageConfig $config
+        CrossEngageConfig $config,
+        CrossEngageToNewsletterServiceInterface $newsletterService
     ) {
         $this->eventApiClient = $eventApiClient;
         $this->storeTransferMapper = $storeTransferMapper;
-        $this->urlBuilder = $urlBuilder;
         $this->config = $config;
         $this->storeFacade = $storeFacade;
+        $this->newsletterService = $newsletterService;
     }
 
     /**
@@ -76,13 +75,28 @@ class CrossEngageEventHandler
 
         $emailNewsletter = strtolower($this->storeFacade->getCurrentStore()->getName());
         $emailNewsletter.= '-' . strtolower($crossEngageTransfer->getBusinessUnit());
+        $hash = $this->newsletterService->getHash($crossEngageTransfer->getEmail());
+
+        $optInLink = $this->newsletterService->buildOptInUrl([
+            $crossEngageTransfer->getLanguage(),
+            NewsletterConstants::NEWSTLETTER,
+            'confirm-subscription',
+            $hash
+        ]);
+
+        $optOutLink = $this->newsletterService->buildOptOutUrl([
+            $crossEngageTransfer->getLanguage(),
+            NewsletterConstants::NEWSTLETTER,
+            'unsubscribe',
+            $hash
+        ]);
 
         $crossEngageNewsletterEventTransfer = new CrossEngageNewsletterEventTransfer();
         $crossEngageNewsletterEventTransfer
             ->setEmailNewsletter($emailNewsletter)
             ->setLanguage($crossEngageTransfer->getLanguage())
-            ->setOptInUrl($this->urlBuilder->buildOptInUrl($crossEngageTransfer))
-            ->setOptOutUrl($this->urlBuilder->buildOptOutUrl($crossEngageTransfer));
+            ->setOptInUrl($optInLink)
+            ->setOptOutUrl($optOutLink);
 
         $crossEngageEventTransfer = new CrossEngageEventTransfer();
         $crossEngageEventTransfer
@@ -106,7 +120,7 @@ class CrossEngageEventHandler
         $crossEngageEventTransfer->setEvent('Opt Out');
         $crossEngageEventTransfer->setProperties(
             [
-                $this->createCrossEngageNewsletterEvent($crossEngageTransfer)->toArray(true, true)
+            $this->createCrossEngageNewsletterEvent($crossEngageTransfer)->toArray(true, true)
             ]
         );
 
@@ -114,7 +128,7 @@ class CrossEngageEventHandler
         $eventsCollection->append($crossEngageEventTransfer);
 
         $crossEngageBaseEventTransfer = (new CrossEngageBaseEventTransfer())
-            ->setId(\sha1($crossEngageTransfer->getEmail()))
+            ->setId($this->newsletterService->getHash($crossEngageTransfer->getEmail()))
             ->setEvents($eventsCollection);
 
         return $this->eventApiClient->postEvent($crossEngageBaseEventTransfer);
@@ -128,7 +142,7 @@ class CrossEngageEventHandler
     protected function createCrossEngageBaseEventTransfer(CrossEngageTransfer $crossEngageTransfer): CrossEngageBaseEventTransfer
     {
         $crossEngageBaseEvent = new CrossEngageBaseEventTransfer();
-        $crossEngageBaseEvent->setId(\sha1($crossEngageTransfer->getEmail()));
+        $crossEngageBaseEvent->setId($this->newsletterService->getHash($crossEngageTransfer->getEmail()));
 
         return $crossEngageBaseEvent;
     }

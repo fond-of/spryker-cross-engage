@@ -6,9 +6,9 @@ use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use FondOfSpryker\Shared\Newsletter\NewsletterConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
-use FondOfSpryker\Zed\CrossEngage\Business\Mapper\CrossEngageResponseMapper;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
+use FondOfSpryker\Zed\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceInterface;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 use GuzzleHttp\Exception\RequestException;
@@ -37,21 +37,30 @@ class CrossEngageUserApiClient
     protected $storeTransferMapper;
 
     /**
+     * @var CrossEngageToNewsletterServiceInterface
+     */
+    protected $newsletterService;
+
+
+    /**
      * @param \FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface $guzzleClient
      * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig                                        $config
      * @param CrossEngageEventHandler                                                                 $engageEventHandler
      * @param StoreTransferMapper                                                                     $storeTransferMapper
+     * @param CrossEngageToNewsletterServiceInterface                                                 $newsletterService
      */
     public function __construct(
         CrossEngageToGuzzleInterface $guzzleClient,
         CrossEngageConfig $config,
         CrossEngageEventHandler $engageEventHandler,
-        StoreTransferMapper $storeTransferMapper
+        StoreTransferMapper $storeTransferMapper,
+        CrossEngageToNewsletterServiceInterface $newsletterService
     ) {
         $this->guzzleClient = $guzzleClient;
         $this->config = $config;
         $this->engageEventHandler = $engageEventHandler;
         $this->storeTransferMapper = $storeTransferMapper;
+        $this->newsletterService = $newsletterService;
     }
 
     /**
@@ -99,8 +108,10 @@ class CrossEngageUserApiClient
             }
         }
 
+        $hash = $this->newsletterService->getHash($crossEngageTransfer->getEmail());
+
         $crossEngageResponseTransfer = new CrossEngageResponseTransfer();
-        $crossEngageResponseTransfer->setStatus(sprintf('user created with ID %s', \sha1($crossEngageTransfer->getEmail())));
+        $crossEngageResponseTransfer->setStatus(sprintf('user created with ID %s', $hash));
         $crossEngageResponseTransfer->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_SUBSCRIBE_SUCCESS);
 
         return $crossEngageResponseTransfer;
@@ -129,9 +140,10 @@ class CrossEngageUserApiClient
             $bodyArray = $crossEngageTransfer->toArray(false, true);
             unset($bodyArray['host']); // TODO: Using CrossEngageApiTransfer instead
             $json = json_encode($bodyArray);
+            $hash = $this->newsletterService->getHash($crossEngageTransfer->getEmail());
 
             $response = $this->guzzleClient->put(
-                $this->config->getCrossEngageApiUriCreateUser(\sha1($crossEngageTransfer->getEmail())),
+                $this->config->getCrossEngageApiUriCreateUser($hash),
                 array_merge(
                     $this->config->getXngHeader(),
                     $this->config->getXngRequestOptions(),
