@@ -70,7 +70,7 @@ class CrossEngageSubscriptionHandler
 
         return (new CrossEngageResponseTransfer())
             ->setStatus(sprintf('user (%s) already exists', $crossEngageTransfer->getEmail()))
-            ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_ALREADY_SUBSCRIBED);
+            ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_ALREADY_SUBSCRIBED);
     }
 
     /**
@@ -86,15 +86,18 @@ class CrossEngageSubscriptionHandler
         if ($crossEngageTransfer === null) {
             return (new CrossEngageResponseTransfer())
                 ->setStatus(sprintf('no user found for external-id %s', $externalId))
-                ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_CONFIRM_SUBSCRIPTION);
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
         if ($crossEngageTransfer instanceof CrossEngageTransfer) {
-            $this->crossEngageApiClient->confirmSubscription($crossEngageTransfer, CrossEngageConstants::XNG_STATE_SUBSCRIBED);
+            return $this->crossEngageApiClient->confirmSubscription(
+                $crossEngageTransfer,
+                CrossEngageConstants::XNG_STATE_SUBSCRIBED
+            );
         }
 
         return (new CrossEngageResponseTransfer())
-            ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_FAILURE);
+            ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
     }
 
     /**
@@ -114,10 +117,13 @@ class CrossEngageSubscriptionHandler
         }
 
         if ($crossEngageTransfer instanceof CrossEngageTransfer) {
-            $this->crossEngageApiClient->unsubscribe($crossEngageTransfer, CrossEngageConstants::XNG_STATE_UNSUBSCRIBED);
+            return $this->crossEngageApiClient->unsubscribe(
+                $crossEngageTransfer,
+                CrossEngageConstants::XNG_STATE_UNSUBSCRIBED
+            );
         }
 
         return (new CrossEngageResponseTransfer())
-            ->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_FAILURE);
+            ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
     }
 }

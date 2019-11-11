@@ -100,9 +100,9 @@ class StoreTransferMapper
     /**
      * @param CrossEngageTransfer $crossEngageTransfer
      *
-     * @return string
+     * @return string|null
      */
-    public function getEmailState(CrossEngageTransfer $crossEngageTransfer): string
+    public function getEmailState(CrossEngageTransfer $crossEngageTransfer): ?string
     {
         $getter = $this->getNewsletterStateMethod(static::GET);
 

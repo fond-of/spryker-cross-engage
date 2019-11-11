@@ -11,6 +11,7 @@ use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzl
 use FondOfSpryker\Zed\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceInterface;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
+use Generated\Zed\Ide\Newsletter;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -101,18 +102,26 @@ class CrossEngageUserApiClient
      */
     public function createUser(CrossEngageTransfer $crossEngageTransfer, array $options = []): CrossEngageResponseTransfer
     {
-        if ($this->putUser($crossEngageTransfer) === true) {
-            if ($this->engageEventHandler->optIn($crossEngageTransfer)) {
-                $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
-                $this->putUser($crossEngageTransfer);
-            }
+        // create user
+        if ($this->putUser($crossEngageTransfer) === false) {
+            return (new CrossEngageResponseTransfer())
+                ->setStatus(sprintf('could not create user %s', $crossEngageTransfer->getEmail()))
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
-        $hash = $this->newsletterService->getHash($crossEngageTransfer->getEmail());
+        // sent opt-in
+        if ($this->engageEventHandler->optIn($crossEngageTransfer) === false) {
+            return (new CrossEngageResponseTransfer())
+                ->setStatus(sprintf('could not send opt-in event for %s', $crossEngageTransfer->getEmail()))
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
+        }
+
+        $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
+        $this->putUser($crossEngageTransfer);
 
         $crossEngageResponseTransfer = new CrossEngageResponseTransfer();
-        $crossEngageResponseTransfer->setStatus(sprintf('user created with ID %s', $hash));
-        $crossEngageResponseTransfer->setRedirectTo(NewsletterConstants::ROUTE_NEWSLETTER_SUBSCRIBE_SUCCESS);
+        $crossEngageResponseTransfer->setStatus(sprintf('user created with %s', $crossEngageTransfer->getEmail()));
+        $crossEngageResponseTransfer->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_SUBSCRIBE);
 
         return $crossEngageResponseTransfer;
     }
@@ -167,24 +176,24 @@ class CrossEngageUserApiClient
      */
     public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer, string $state, array $options = []): CrossEngageResponseTransfer
     {
-        if ($this->storeTransferMapper->getEmailState($crossEngageTransfer) !== CrossEngageConstants::XNG_STATE_EMAIL_SENT) {
-            return (new CrossEngageResponseTransfer)
-                ->setStatus('user wrong state')
-                ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE_FAILED);
+        $errorResponse = $this->checkUserState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
+
+        if ($errorResponse instanceof CrossEngageResponseTransfer) {
+            return $errorResponse;
         }
+
 
         $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, $state);
 
-        if ($this->putUser($crossEngageTransfer) === true) {
-            if ($this->engageEventHandler->optIn($crossEngageTransfer)) {
-                $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
-                $this->putUser($crossEngageTransfer);
-            }
+        if ($this->putUser($crossEngageTransfer) === false) {
+            return (new CrossEngageResponseTransfer())
+                ->setStatus(sprintf('could not update user %s to %s', $crossEngageTransfer->getEmail(), $state))
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_SUBSCRIBE);
         }
 
-        $this->putUser($crossEngageTransfer);
-
-        return new CrossEngageResponseTransfer();
+        return (new CrossEngageResponseTransfer())
+            ->setStatus(sprintf('user %s subscribed confirm', $crossEngageTransfer->getEmail()))
+            ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_SUBSCRIPTION_CONFIRMED);
     }
 
     /**
@@ -196,22 +205,31 @@ class CrossEngageUserApiClient
      */
     public function unsubscribe(CrossEngageTransfer $crossEngageTransfer, string $state, array $options = []): CrossEngageResponseTransfer
     {
-        if ($this->storeTransferMapper->getEmailState($crossEngageTransfer) !== CrossEngageConstants::XNG_STATE_SUBSCRIBED) {
-            return (new CrossEngageResponseTransfer)
-                ->setStatus('user wrong state')
-                ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE_FAILED);
+        $errorResponse = $this->checkUserState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_SUBSCRIBED);
+
+        if ($errorResponse instanceof CrossEngageResponseTransfer) {
+            return $errorResponse;
+        }
+
+        // sent opt-in
+        if ($this->engageEventHandler->optOut($crossEngageTransfer) === false) {
+            return (new CrossEngageResponseTransfer())
+                ->setStatus(sprintf('could not send opt-out event for %s', $crossEngageTransfer->getEmail()))
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
         $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, $state);
 
-        if ($this->putUser($crossEngageTransfer) === true) {
-            if ($this->engageEventHandler->optOut($crossEngageTransfer)) {
-                $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_UNSUBSCRIBED);
-                $this->putUser($crossEngageTransfer);
-            }
+        // update user
+        if ($this->putUser($crossEngageTransfer) === false) {
+            return (new CrossEngageResponseTransfer())
+                ->setStatus(sprintf('could not update user %s', $crossEngageTransfer->getEmail()))
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
-        return new CrossEngageResponseTransfer();
+        return (new CrossEngageResponseTransfer())
+            ->setStatus(sprintf('user %s unsubscribed (%s)', $crossEngageTransfer->getEmail(), $crossEngageTransfer->getBusinessUnit()))
+            ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_UNSUBSCRIBED);
     }
 
     /**
@@ -225,5 +243,34 @@ class CrossEngageUserApiClient
     protected function updateEmailNewsletterState(CrossEngageTransfer $crossEngageTransfer, string $state): CrossEngageTransfer
     {
         return $this->storeTransferMapper->updateEmailState($crossEngageTransfer, $state);
+    }
+
+    /**
+     * @param CrossEngageTransfer|null $crossEngageTransfer
+     * @param string                   $state
+     *
+     * @return CrossEngageResponseTransfer|null
+     */
+    protected function checkUserState(?CrossEngageTransfer $crossEngageTransfer, string $state): ?CrossEngageResponseTransfer
+    {
+        if ($crossEngageTransfer === null) {
+            return (new CrossEngageResponseTransfer)
+                ->setStatus('no user entry found')
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
+        }
+
+        if ($this->storeTransferMapper->getEmailState($crossEngageTransfer) === null) {
+            return (new CrossEngageResponseTransfer)
+                ->setStatus(sprintf('user (%s) found, but not for %s', $crossEngageTransfer->getEmail(), $crossEngageTransfer->getBusinessUnit()))
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
+        }
+
+        if ($this->storeTransferMapper->getEmailState($crossEngageTransfer) !== $state) {
+            return (new CrossEngageResponseTransfer)
+                ->setStatus(sprintf('user (%s) wrong state', $crossEngageTransfer->getEmail()))
+                ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE_FAILED);
+        }
+
+        return null;
     }
 }

@@ -77,19 +77,21 @@ class CrossEngageEventHandler
         $emailNewsletter.= '-' . strtolower($crossEngageTransfer->getBusinessUnit());
         $hash = $this->newsletterService->getHash($crossEngageTransfer->getEmail());
 
-        $optInLink = $this->newsletterService->buildOptInUrl([
+        $optInLink = $this->newsletterService->buildOptInUrl(
+            [
             $crossEngageTransfer->getLanguage(),
             NewsletterConstants::NEWSTLETTER,
-            'confirm-subscription',
             $hash
-        ]);
+            ]
+        );
 
-        $optOutLink = $this->newsletterService->buildOptOutUrl([
+        $optOutLink = $this->newsletterService->buildOptOutUrl(
+            [
             $crossEngageTransfer->getLanguage(),
             NewsletterConstants::NEWSTLETTER,
-            'unsubscribe',
             $hash
-        ]);
+            ]
+        );
 
         $crossEngageNewsletterEventTransfer = new CrossEngageNewsletterEventTransfer();
         $crossEngageNewsletterEventTransfer
