@@ -268,7 +268,7 @@ class CrossEngageUserApiClient
         if ($this->storeTransferMapper->getEmailState($crossEngageTransfer) !== $state) {
             return (new CrossEngageResponseTransfer)
                 ->setStatus(sprintf('user (%s) wrong state', $crossEngageTransfer->getEmail()))
-                ->setRedirectTo(CrossEngageConstants::ROUTE_CROSS_ENGAGE_SUBSCRIBE_FAILED);
+                ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
         return null;

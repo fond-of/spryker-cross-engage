@@ -277,20 +277,18 @@ class StoreTransferMapper
         $crossEngageTransfer = $this->setIp($crossEngageTransfer);
 
         switch ($numericState = $this->getNumericState($crossEngageTransfer)) {
-        case $numericState < 3:
-            return $crossEngageTransfer = $this->setEmailOptInSource($crossEngageTransfer);
+            case $numericState < 0:
+                return $crossEngageTransfer = $this->setUnsubscribedAtFor($crossEngageTransfer);
 
-        case $numericState === 3:
-            return $crossEngageTransfer = $this->setSubscribedAtFor($crossEngageTransfer);
+            case $numericState < 3:
+                return $crossEngageTransfer = $this->setEmailOptInSource($crossEngageTransfer);
 
-        case $numericState < 0:
-            return $crossEngageTransfer = $this->setUnsubscribedAtFor($crossEngageTransfer);
+            case $numericState === 3:
+                return $crossEngageTransfer = $this->setSubscribedAtFor($crossEngageTransfer);
 
-        default:
-            throw new \Exception('this code should never reached! ' . __METHOD__);
+            default:
+                throw new \Exception('this code should never reached! ' . __METHOD__);
         }
-
-        return $crossEngageTransfer;
     }
 
     /**
