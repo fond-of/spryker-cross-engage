@@ -182,7 +182,6 @@ class CrossEngageUserApiClient
             return $errorResponse;
         }
 
-
         $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, $state);
 
         if ($this->putUser($crossEngageTransfer) === false) {

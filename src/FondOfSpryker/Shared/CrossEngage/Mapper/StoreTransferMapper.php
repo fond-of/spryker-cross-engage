@@ -192,7 +192,7 @@ class StoreTransferMapper
      *
      * @throws \Exception
      */
-    public function setOptInAtFor(CrossEngageTransfer $crossEngageTransfer, ?\DateTime $dateTime): CrossEngageTransfer
+    public function setOptInAtFor(CrossEngageTransfer $crossEngageTransfer, ?\DateTime $dateTime = null): CrossEngageTransfer
     {
         $setter = $this->getOptInAtForMethod(static::SET);
 
@@ -281,7 +281,10 @@ class StoreTransferMapper
                 return $crossEngageTransfer = $this->setUnsubscribedAtFor($crossEngageTransfer);
 
             case $numericState < 3:
-                return $crossEngageTransfer = $this->setEmailOptInSource($crossEngageTransfer);
+                $crossEngageTransfer = $this->setEmailOptInSource($crossEngageTransfer);
+                $crossEngageTransfer = $this->setOptInAtFor($crossEngageTransfer);
+
+                return $crossEngageTransfer;
 
             case $numericState === 3:
                 return $crossEngageTransfer = $this->setSubscribedAtFor($crossEngageTransfer);
