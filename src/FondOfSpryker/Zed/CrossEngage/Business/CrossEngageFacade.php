@@ -12,7 +12,7 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
 class CrossEngageFacade extends AbstractFacade implements CrossEngageFacadeInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     * @param  \Generated\Shared\Transfer\CrossEngageTransfer  $crossEngageTransfer
      *
      * @return CrossEngageResponseTransfer
      * @throws
@@ -23,7 +23,7 @@ class CrossEngageFacade extends AbstractFacade implements CrossEngageFacadeInter
     }
 
     /**
-     * @param  CrossEngageTransfer $crossEngageTransfer
+     * @param  CrossEngageTransfer  $crossEngageTransfer
      * @return CrossEngageResponseTransfer
      */
     public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
@@ -32,12 +32,31 @@ class CrossEngageFacade extends AbstractFacade implements CrossEngageFacadeInter
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
+     * @param  CrossEngageTransfer  $crossEngageTransfer
      *
      * @return CrossEngageResponseTransfer
      */
     public function unsubscribe(CrossEngageTransfer $crossEngageTransfer): CrossEngageResponseTransfer
     {
         return $this->getFactory()->createSubscriptionHandler()->unsubscribe($crossEngageTransfer);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegisteredImporterNames(): string
+    {
+        return $this->getFactory()->getImportHandler()->getImporterNames();
+    }
+
+
+    /**
+     * @param  array  $importerNames
+     * @param  array  $files
+     * @return void
+     */
+    public function handleImporter(array $importerNames, array $files): void
+    {
+        $this->getFactory()->getImportHandler()->handle($importerNames, $files);
     }
 }

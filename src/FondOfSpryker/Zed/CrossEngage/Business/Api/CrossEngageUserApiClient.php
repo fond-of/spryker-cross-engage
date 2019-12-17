@@ -15,7 +15,7 @@ use Generated\Zed\Ide\Newsletter;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Response;
 
-class CrossEngageUserApiClient
+class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
 {
     /**
      * @var \FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface

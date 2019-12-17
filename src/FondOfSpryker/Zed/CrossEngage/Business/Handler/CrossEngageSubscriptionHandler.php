@@ -6,6 +6,7 @@ use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use FondOfSpryker\Shared\Newsletter\NewsletterConstants;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
+use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClientInterface;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageConfig;
 use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
@@ -32,15 +33,14 @@ class CrossEngageSubscriptionHandler
     private $storeTransferMapper;
 
     /**
-     * SubscriptionHandler constructor.
-     *
-     * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig                     $config
-     * @param \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient $crossEngageApiClient
-     * @param \FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper         $storeTransferMapper
+     * CrossEngageSubscriptionHandler constructor.
+     * @param  \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig  $config
+     * @param  \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClientInterface  $crossEngageApiClient
+     * @param  \FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper  $storeTransferMapper
      */
     public function __construct(
         CrossEngageConfig $config,
-        CrossEngageUserApiClient $crossEngageApiClient,
+        CrossEngageUserApiClientInterface $crossEngageApiClient,
         StoreTransferMapper $storeTransferMapper
     ) {
         $this->config = $config;

@@ -5,8 +5,11 @@ namespace FondOfSpryker\Zed\CrossEngage\Business;
 use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageEventApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
+use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClientInterface;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageSubscriptionHandler;
+use FondOfSpryker\Zed\CrossEngage\Business\Handler\ImportHandler;
+use FondOfSpryker\Zed\CrossEngage\Business\Handler\ImportHandlerInterface;
 use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface;
@@ -33,9 +36,10 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient
+     * @return \FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClientInterface
+     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
-    protected function createCrossEngageApiClient(): CrossEngageUserApiClient
+    public function createCrossEngageApiClient(): CrossEngageUserApiClientInterface
     {
         return new CrossEngageUserApiClient(
             $this->getGuzzleClient(),
@@ -73,6 +77,14 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     public function getNewsletterService(): CrossEngageToNewsletterServiceInterface
     {
         return $this->getProvidedDependency(CrossEngageDependencyProvider::NEWSLETTER_SERVICE);
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CrossEngage\Business\Handler\ImportHandlerInterface
+     */
+    public function getImportHandler(): ImportHandlerInterface
+    {
+        return $this->getProvidedDependency(CrossEngageDependencyProvider::CROSS_ENGAGE_IMPORTER);
     }
 
     /**

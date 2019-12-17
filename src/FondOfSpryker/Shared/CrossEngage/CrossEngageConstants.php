@@ -35,4 +35,6 @@ interface CrossEngageConstants
 
     public const OPT_IN_PATH_SEGMENT = 'OPT_IN_PATH_SEGMENT';
     public const OPT_OUT_PATH_SEGMENT = 'OPT_OUT_PATH_SEGMENT';
+    
+    public const CROSS_ENGAGE_IMPORT_PATH = 'CROSS_ENGAGE_IMPORT_PATH';
 }

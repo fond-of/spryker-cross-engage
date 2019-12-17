@@ -151,4 +151,12 @@ class CrossEngageConfig extends AbstractBundleConfig
         return $this->get(CrossEngageConstants::OPT_OUT_PATH_SEGMENT, 'unsubscribe');
     }
 
+    /**
+     * @return string
+     */
+    public function getImportPath(): string
+    {
+        return $this->get(CrossEngageConstants::CROSS_ENGAGE_IMPORT_PATH, 'data/import/');
+    }
+
 }
