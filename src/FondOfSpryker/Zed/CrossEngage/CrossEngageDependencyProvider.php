@@ -2,25 +2,19 @@
 
 namespace FondOfSpryker\Zed\CrossEngage;
 
-use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\CrossEngageBusinessFactory;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\ImportHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Importer\ActiveCampaignDataImporter;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleBridge;
-use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToNewsletterFacadeBridge;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToStoreFacadeBridge;
-use FondOfSpryker\Zed\CrossEngage\Dependency\Service\CrossEngageToNewsletterHashGeneratorBridge;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceBridge;
 use GuzzleHttp\Client as GuzzleClient;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
-use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
-use Spryker\Zed\Kernel\Business\AbstractFacade;
 use Spryker\Zed\Kernel\ClassResolver\Factory\FactoryResolver;
 use Spryker\Zed\Kernel\Container;
 
 class CrossEngageDependencyProvider extends AbstractBundleDependencyProvider
 {
-
     public const CLIENT_GUZZLE = 'CLIENT_GUZZLE';
     public const STORE_FACADE = 'STORE_FACADE';
     public const NEWSLETTER_SERVICE = 'NEWSLETTER_SERVICE';
@@ -59,9 +53,9 @@ class CrossEngageDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Zed\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Zed\Kernel\Container
      */
     protected function addStoreFacade(Container $container): Container
     {
@@ -73,7 +67,8 @@ class CrossEngageDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @param  \Spryker\Zed\Kernel\Container  $container
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
      * @return \Spryker\Zed\Kernel\Container
      */
     protected function addNewsletterService(Container $container): Container
@@ -86,8 +81,9 @@ class CrossEngageDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @param  \Spryker\Zed\Kernel\Container  $container
-     * @return array|\FondOfSpryker\Zed\CrossEngage\Business\Importer\CrossEngageImporterInterface[]
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \FondOfSpryker\Zed\CrossEngage\Business\Importer\CrossEngageImporterInterface[]
      */
     protected function registerImporterExtend(Container $container): array
     {
@@ -97,7 +93,8 @@ class CrossEngageDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @param  \Spryker\Zed\Kernel\Container  $container
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
      * @return \Spryker\Zed\Kernel\Container
      */
     private function registerImporter(Container $container): Container
@@ -110,7 +107,6 @@ class CrossEngageDependencyProvider extends AbstractBundleDependencyProvider
             }
 
             return $importerCollection;
-
         };
 
         return $container;
