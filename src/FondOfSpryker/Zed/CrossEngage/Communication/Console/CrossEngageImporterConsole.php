@@ -14,16 +14,24 @@ class CrossEngageImporterConsole extends Console
 {
     public const COMMAND_NAME = 'crossengage:import';
     public const DESCRIPTION = 'Imports newsletter from CSV to CrossEngage';
+    public const DESCRIPTION_ERROR = 'Not all required files are available (%s), please run propel:install to get them!';
     public const RESOURCE_OPTION = 'resource';
     public const RESOURCE_OPTION_SHORTCUT = 'r';
     public const RESOURCE_FILES_OPTION = 'files';
     public const RESOURCE_FILES_OPTION_SHORTCUT = 'f';
+
+    protected $requiredClasses = [
+        'Orm/Zed/Store/Persistence/SpyStoreQuery.php'
+    ];
 
     /**
      * @return void
      */
     protected function configure()
     {
+        $helpText = sprintf(static::DESCRIPTION_ERROR, implode(',', $this->requiredClasses));
+        $description = $helpText;
+
         $this->addOption(
             static::RESOURCE_FILES_OPTION,
             static::RESOURCE_FILES_OPTION_SHORTCUT,
@@ -31,22 +39,28 @@ class CrossEngageImporterConsole extends Console
             'Defines the filenames'
         );
 
-        $this->addOption(
-            static::RESOURCE_OPTION,
-            static::RESOURCE_OPTION_SHORTCUT,
-            InputArgument::OPTIONAL,
-            sprintf('Defines the resource aka the importer to use. Available importer: %s', $this->getFacade()->getRegisteredImporterNames())
-        );
+        if ($this->areFilesAvailable()) {
+            $this->addOption(
+                static::RESOURCE_OPTION,
+                static::RESOURCE_OPTION_SHORTCUT,
+                InputArgument::OPTIONAL,
+                sprintf('Defines the resource aka the importer to use. Available importer: %s', $this->getFacade()->getRegisteredImporterNames())
+            );
+            $helpText = '';
+            $description = static::DESCRIPTION;
+        }
 
         $this->setName(static::COMMAND_NAME)
-            ->setDescription(static::DESCRIPTION)
+            ->setDescription($description)
             ->addUsage(sprintf('-%s resource_name -%s filename', static::RESOURCE_OPTION_SHORTCUT,
                 static::RESOURCE_FILES_OPTION_SHORTCUT));
+
+        $this->setHelp($helpText);
     }
 
     /**
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      *
      * @return int|null
      */
@@ -79,5 +93,20 @@ class CrossEngageImporterConsole extends Console
         ));
 
         return $status;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function areFilesAvailable(): bool
+    {
+        $path = sprintf('%s/../../../../../../../../../src', rtrim(__DIR__, '/'));
+        foreach ($this->requiredClasses as $requiredClass) {
+            $test = sprintf('%s/%s', $path, $requiredClass);
+            if (!file_exists(sprintf('%s/%s', $path, $requiredClass))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
