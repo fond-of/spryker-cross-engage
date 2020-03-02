@@ -21,7 +21,8 @@ class CrossEngageImporterConsole extends Console
     public const RESOURCE_FILES_OPTION_SHORTCUT = 'f';
 
     protected $requiredClasses = [
-        'Orm/Zed/Store/Persistence/SpyStoreQuery.php'
+        'Orm/Zed/Store/Persistence/SpyStoreQuery.php',
+        'Orm/Zed/Store/Persistence/Base/SpyStoreQuery.php'
     ];
 
     /**
