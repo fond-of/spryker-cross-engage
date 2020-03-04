@@ -62,7 +62,7 @@ class CrossEngageSubscriptionHandler
             return $this->crossEngageApiClient->createUser($crossEngageTransfer);
         }
 
-        if ($this->storeTransferMapper->getNumericState($crossEngageTransfer) <= 1) {
+        if ($this->storeTransferMapper->getNumericState($crossEngageTransfer) <= 2) {
             return $this->crossEngageApiClient->updateUser(
                 $this->storeTransferMapper->updateEmailState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_NEW)
             );
