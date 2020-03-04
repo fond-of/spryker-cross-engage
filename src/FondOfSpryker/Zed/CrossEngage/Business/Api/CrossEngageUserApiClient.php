@@ -116,7 +116,7 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
                 ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
-        $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
+        //$crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
         $this->putUser($crossEngageTransfer);
 
         $crossEngageResponseTransfer = new CrossEngageResponseTransfer();
@@ -179,7 +179,7 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
      */
     public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer, string $state, array $options = []): CrossEngageResponseTransfer
     {
-        $errorResponse = $this->checkUserState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
+        $errorResponse = $this->checkUserState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_NEW);
 
         if ($errorResponse instanceof CrossEngageResponseTransfer) {
             return $errorResponse;
