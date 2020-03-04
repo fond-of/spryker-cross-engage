@@ -38,7 +38,7 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
         $crossEngageTransfer = $mapper->setEmailState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_NEW);
         $crossEngageTransfer = $mapper->setEmailOptInSource($crossEngageTransfer);
         $crossEngageTransfer = $mapper->setOptInAtFor($crossEngageTransfer, null);
-        $crossEngageTransfer = $mapper->setIp($crossEngageTransfer, $request->getClientIp());
+        $crossEngageTransfer = $mapper->setIp($this->getCustomerIpAddress());
         $crossEngageTransfer->setUriLanguageKey($this->executeUrlLanguageKeyPlugins());
 
         $xngResponse = $this->getClient()->subscribe($crossEngageTransfer);
@@ -94,5 +94,19 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
         }
 
         return '';
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getCustomerIpAddress(): ?string
+    {
+        $ipAddress = $_SERVER['REMOTE_ADDR'];
+
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']) {
+            $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+
+        return $ipAddress;
     }
 }
