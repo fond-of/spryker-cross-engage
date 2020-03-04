@@ -30,11 +30,13 @@ class CrossEngageFactory extends AbstractFactory
     }
 
     /**
-     * @return Store
+     * @return \Spryker\Shared\Kernel\Store
+     *
+     * @throws
      */
-    protected function getStore(): Store
+    public function getStore(): Store
     {
-        return Store::getInstance();
+        return  $this->getProvidedDependency(CrossEngageDependencyProvider::STORE);
     }
 
     /**
@@ -53,5 +55,15 @@ class CrossEngageFactory extends AbstractFactory
     public function createStoreTransferMapper(): StoreTransferMapper
     {
         return new StoreTransferMapper($this->getStorename());
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\CrossEngage\Model\UriLanguageKey\UriLanguageKeyPluginInterface[]
+     *
+     * @throws
+     */
+    public function getUrlLanguageKeyPlugins(): array
+    {
+        return $this->getProvidedDependency(CrossEngageDependencyProvider::URL_LANGUAGE_KEY_PLUGINS);
     }
 }

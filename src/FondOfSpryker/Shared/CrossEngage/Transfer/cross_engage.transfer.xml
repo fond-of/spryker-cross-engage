@@ -36,6 +36,7 @@
         <property name="address" type="CrossEngageAddress"/>
 
         <property name="host" type="string"/>
+        <property name="uriLanguageKey" type="string"/>
     </transfer>
 
     <transfer name="CrossEngageApi">
