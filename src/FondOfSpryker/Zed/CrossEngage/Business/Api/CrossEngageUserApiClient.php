@@ -179,7 +179,7 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
      */
     public function confirmSubscription(CrossEngageTransfer $crossEngageTransfer, string $state, array $options = []): CrossEngageResponseTransfer
     {
-        $errorResponse = $this->checkUserState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
+        $errorResponse = $this->checkUserState($crossEngageTransfer);
 
         if ($errorResponse instanceof CrossEngageResponseTransfer) {
             return $errorResponse;
@@ -243,11 +243,10 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
 
     /**
      * @param CrossEngageTransfer|null $crossEngageTransfer
-     * @param string                   $state
      *
      * @return CrossEngageResponseTransfer|null
      */
-    protected function checkUserState(?CrossEngageTransfer $crossEngageTransfer, string $state): ?CrossEngageResponseTransfer
+    protected function checkUserState(?CrossEngageTransfer $crossEngageTransfer): ?CrossEngageResponseTransfer
     {
         if ($crossEngageTransfer === null) {
             return (new CrossEngageResponseTransfer)
@@ -255,13 +254,15 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
                 ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
-        if ($this->storeTransferMapper->getEmailState($crossEngageTransfer) === null) {
+        $state = $this->storeTransferMapper->getEmailState($crossEngageTransfer);
+
+        if ($state === null) {
             return (new CrossEngageResponseTransfer)
                 ->setStatus(sprintf('user (%s) found, but not for %s', $crossEngageTransfer->getEmail(), $crossEngageTransfer->getBusinessUnit()))
                 ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
-        if ($this->storeTransferMapper->getEmailState($crossEngageTransfer) !== $state) {
+        if ($state !== CrossEngageConstants::XNG_STATE_EMAIL_SENT && $state !== CrossEngageConstants::XNG_STATE_NEW) {
             return (new CrossEngageResponseTransfer)
                 ->setStatus(sprintf('user (%s) wrong state', $crossEngageTransfer->getEmail()))
                 ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);

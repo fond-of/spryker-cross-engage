@@ -41,11 +41,16 @@ class CrossEngageImporterConsole extends Console
         );
 
         if ($this->areFilesAvailable()) {
+            try {
+                $importerNames = $this->getFacade()->getRegisteredImporterNames();
+            } catch (\Exception $exception) {
+                $importerNames = '';
+            }
             $this->addOption(
                 static::RESOURCE_OPTION,
                 static::RESOURCE_OPTION_SHORTCUT,
                 InputArgument::OPTIONAL,
-                sprintf('Defines the resource aka the importer to use. Available importer: %s', $this->getFacade()->getRegisteredImporterNames())
+                sprintf('Defines the resource aka the importer to use. Available importer: %s', $importerNames)
             );
             $helpText = '';
             $description = static::DESCRIPTION;
