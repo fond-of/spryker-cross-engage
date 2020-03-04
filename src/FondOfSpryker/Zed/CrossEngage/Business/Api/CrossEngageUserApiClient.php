@@ -84,7 +84,7 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
 
             $content = json_decode($response->getBody()->getContents(), true);
 
-            return $crossEngageTransfer->fromArray($content, true);
+            return (new CrossEngageTransfer())->fromArray($content, true);
         } catch (RequestException $e) {
             if ($e->getCode() === Response::HTTP_NOT_FOUND) {
                 return null;
@@ -116,7 +116,7 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
                 ->setRedirectTo(NewsletterConstants::ROUTE_REDIRECT_NEWSLETTER_FAILURE);
         }
 
-        $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_EMAIL_SENT);
+        $crossEngageTransfer = $this->updateEmailNewsletterState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_NEW);
         $this->putUser($crossEngageTransfer);
 
         $crossEngageResponseTransfer = new CrossEngageResponseTransfer();
