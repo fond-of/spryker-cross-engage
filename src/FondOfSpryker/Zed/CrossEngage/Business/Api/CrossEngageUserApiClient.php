@@ -147,7 +147,10 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
     {
         try {
             $bodyArray = $crossEngageTransfer->toArray(false, true);
+
             unset($bodyArray['host']); // TODO: Using CrossEngageApiTransfer instead
+            unset($bodyArray['uriLanguageKey']); // TODO: Using CrossEngageApiTransfer instead
+
             $json = json_encode($bodyArray);
             $hash = $this->newsletterService->getHash($crossEngageTransfer->getEmail());
 
@@ -204,13 +207,7 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
      */
     public function unsubscribe(CrossEngageTransfer $crossEngageTransfer, string $state, array $options = []): CrossEngageResponseTransfer
     {
-        $errorResponse = $this->checkUserState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_SUBSCRIBED);
-
-        if ($errorResponse instanceof CrossEngageResponseTransfer) {
-            return $errorResponse;
-        }
-
-        // sent opt-in
+        // sent opt-out
         if ($this->engageEventHandler->optOut($crossEngageTransfer) === false) {
             return (new CrossEngageResponseTransfer())
                 ->setStatus(sprintf('could not send opt-out event for %s', $crossEngageTransfer->getEmail()))

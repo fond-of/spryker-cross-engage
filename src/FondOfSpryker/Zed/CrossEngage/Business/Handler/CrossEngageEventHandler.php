@@ -76,20 +76,21 @@ class CrossEngageEventHandler
         $emailNewsletter = strtolower($this->storeFacade->getCurrentStore()->getName());
         $emailNewsletter.= '-' . strtolower($crossEngageTransfer->getBusinessUnit());
         $hash = $this->newsletterService->getHash($crossEngageTransfer->getEmail());
+        $uriLanguageKey = ($crossEngageTransfer->getUriLanguageKey()) ?: $crossEngageTransfer->getLanguage();
 
         $optInLink = $this->newsletterService->buildOptInUrl(
             [
-            $crossEngageTransfer->getLanguage(),
-            NewsletterConstants::NEWSTLETTER,
-            $hash
+                $uriLanguageKey,
+                NewsletterConstants::NEWSTLETTER,
+                $hash
             ]
         );
 
         $optOutLink = $this->newsletterService->buildOptOutUrl(
             [
-            $crossEngageTransfer->getLanguage(),
-            NewsletterConstants::NEWSTLETTER,
-            $hash
+                $uriLanguageKey,
+                NewsletterConstants::NEWSTLETTER,
+                $hash
             ]
         );
 
@@ -156,8 +157,11 @@ class CrossEngageEventHandler
      */
     protected function createCrossEngageNewsletterEvent(CrossEngageTransfer $crossEngageTransfer): CrossEngageNewsletterEventTransfer
     {
+        $emailNewsletter = strtolower($this->storeFacade->getCurrentStore()->getName());
+        $emailNewsletter.= '-' . strtolower($crossEngageTransfer->getBusinessUnit());
+
         $crossEngageNewsletterEventTransfer = new CrossEngageNewsletterEventTransfer();
-        $crossEngageNewsletterEventTransfer->setEmailNewsletter($this->storeTransferMapper->getStorename());
+        $crossEngageNewsletterEventTransfer->setEmailNewsletter($emailNewsletter);
         $crossEngageNewsletterEventTransfer->setLanguage($crossEngageTransfer->getLanguage());
 
         return $crossEngageNewsletterEventTransfer;

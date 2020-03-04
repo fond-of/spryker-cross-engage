@@ -27,20 +27,21 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
         $mapper = $this->getFactory()
             ->createStoreTransferMapper();
 
-        $xngTransfer = new CrossEngageTransfer();
-        $xngTransfer
+        $crossEngageTransfer = new CrossEngageTransfer();
+        $crossEngageTransfer
             ->setEmail($email)
             ->setExternalId(\sha1($email))
             ->setLanguage(\explode('_', $this->getLocale())[0])
             ->setBusinessUnit($this->getLocale())
             ->setHost($request->getSchemeAndHttpHost());
 
-        $xngTransfer = $mapper->setEmailState($xngTransfer, CrossEngageConstants::XNG_STATE_NEW);
-        $xngTransfer = $mapper->setEmailOptInSource($xngTransfer);
-        $xngTransfer = $mapper->setOptInAtFor($xngTransfer, null);
-        $xngTransfer = $mapper->setIp($xngTransfer, $request->getClientIp());
+        $crossEngageTransfer = $mapper->setEmailState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_NEW);
+        $crossEngageTransfer = $mapper->setEmailOptInSource($crossEngageTransfer);
+        $crossEngageTransfer = $mapper->setOptInAtFor($crossEngageTransfer, null);
+        $crossEngageTransfer = $mapper->setIp($crossEngageTransfer, $request->getClientIp());
+        $crossEngageTransfer->setUriLanguageKey($this->executeUrlLanguageKeyPlugins());
 
-        $xngResponse = $this->getClient()->subscribe($xngTransfer);
+        $xngResponse = $this->getClient()->subscribe($crossEngageTransfer);
 
         return (new NewsletterResponseTransfer())
             ->fromArray($xngResponse->toArray(), true);
@@ -75,5 +76,23 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
 
         return (new NewsletterResponseTransfer())
             ->fromArray($xngResponse->toArray(), true);
+    }
+
+    /**
+     * @return string
+     */
+    protected function executeUrlLanguageKeyPlugins(): string
+    {
+        $store = $this->getFactory()->getStore();
+
+        foreach ($this->getFactory()->getUrlLanguageKeyPlugins() as $languageKeyPlugin) {
+            $uriLanguageKey = $languageKeyPlugin->getLanguageKey($store);
+
+            if ($uriLanguageKey !== '') {
+                return $uriLanguageKey;
+            }
+        }
+
+        return '';
     }
 }
