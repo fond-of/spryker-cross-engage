@@ -38,7 +38,7 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
         $crossEngageTransfer = $mapper->setEmailState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_NEW);
         $crossEngageTransfer = $mapper->setEmailOptInSource($crossEngageTransfer);
         $crossEngageTransfer = $mapper->setOptInAtFor($crossEngageTransfer, null);
-        $crossEngageTransfer = $mapper->setIp($this->getCustomerIpAddress());
+        $crossEngageTransfer = $mapper->setIp($crossEngageTransfer, $this->getCustomerIpAddress());
         $crossEngageTransfer->setUriLanguageKey($this->executeUrlLanguageKeyPlugins());
 
         $xngResponse = $this->getClient()->subscribe($crossEngageTransfer);
