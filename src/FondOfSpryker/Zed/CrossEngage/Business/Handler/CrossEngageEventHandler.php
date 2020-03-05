@@ -121,11 +121,7 @@ class CrossEngageEventHandler
     {
         $crossEngageEventTransfer = new CrossEngageEventTransfer();
         $crossEngageEventTransfer->setEvent('Opt Out');
-        $crossEngageEventTransfer->setProperties(
-            [
-            $this->createCrossEngageNewsletterEvent($crossEngageTransfer)->toArray(true, true)
-            ]
-        );
+        $crossEngageEventTransfer->setProperties($this->createCrossEngageNewsletterEvent($crossEngageTransfer));
 
         $eventsCollection = new \ArrayObject();
         $eventsCollection->append($crossEngageEventTransfer);
