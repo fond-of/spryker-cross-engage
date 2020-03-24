@@ -207,7 +207,6 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
      */
     public function unsubscribe(CrossEngageTransfer $crossEngageTransfer, string $state, array $options = []): CrossEngageResponseTransfer
     {
-        // sent opt-out
         if ($this->engageEventHandler->optOut($crossEngageTransfer) === false) {
             return (new CrossEngageResponseTransfer())
                 ->setStatus(sprintf('could not send opt-out event for %s', $crossEngageTransfer->getEmail()))
