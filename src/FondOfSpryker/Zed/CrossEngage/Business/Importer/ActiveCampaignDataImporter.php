@@ -15,6 +15,7 @@ class ActiveCampaignDataImporter implements CrossEngageImporterInterface
 
     public const NAME = 'ActiveCampaignDataImporter';
     public const DELIMITER = ';';
+    public const BOM = "\xEF\xBB\xBF";
     public const DATE_CONVERT_FIELDS = [
         'AtFor',
     ];
@@ -115,10 +116,11 @@ class ActiveCampaignDataImporter implements CrossEngageImporterInterface
      */
     public function run(string $file): void
     {
+        $file = $this->checkAndClearBom($file);
         if ($this->validateFile($file, $this->requiredHeaderSubscribe) || $this->validateFile(
-            $file,
-            $this->requiredHeaderUnsubscribe
-        )) {
+                $file,
+                $this->requiredHeaderUnsubscribe
+            )) {
             $row = 1;
             $headerCount = count($this->header);
             if (($handle = fopen($file, 'r')) !== false) {
@@ -197,7 +199,8 @@ class ActiveCampaignDataImporter implements CrossEngageImporterInterface
     protected function updateFetchedUserData(
         CrossEngageTransfer $fetchedData,
         CrossEngageTransfer $importData
-    ): CrossEngageTransfer {
+    ): CrossEngageTransfer
+    {
         foreach ($importData->toArray(false, true) as $field => $value) {
             foreach ($this->forceUpdateFields as $forcedField) {
                 if (strpos($field, $forcedField) !== false && $value !== null) {
@@ -324,5 +327,20 @@ class ActiveCampaignDataImporter implements CrossEngageImporterInterface
     {
         echo $message . PHP_EOL;
         $this->getLogger()->{$type}($message, $context);
+    }
+
+    /**
+     * @param $filepath
+     *
+     * @return string
+     */
+    protected function checkAndClearBom($filepath): string
+    {
+        $content = file_get_contents($filepath);
+        if (strpos($content, static::BOM) !== false) {
+            $replaced = file_put_contents($filepath, str_replace(static::BOM, '', $content));
+            $this->log(sprintf('BOM was removed from file %s. Bytes wrote for new file %s', $filepath, $replaced));
+        }
+        return $filepath;
     }
 }
