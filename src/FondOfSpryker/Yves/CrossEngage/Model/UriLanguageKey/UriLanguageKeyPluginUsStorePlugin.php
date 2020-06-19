@@ -13,8 +13,9 @@ class UriLanguageKeyPluginUsStorePlugin implements UriLanguageKeyPluginInterface
      */
     public function getLanguageKey(Store $store): string
     {
-        if (\strpos($store->getStoreName(), '_US') !== false) {
-            return 'us';
+        $language = array_search($store->getCurrentLocale(), $store->getLocales());
+        if ($language !== false) {
+            return $language;
         }
 
         return '';
