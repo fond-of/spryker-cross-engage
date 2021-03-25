@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Yves\CrossEngage;
 
 use FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper;
+use FondOfSpryker\Yves\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceInterface;
 use FondOfSpryker\Yves\CrossEngage\Form\CrossEngageSubscriptionForm;
 use Spryker\Shared\Application\ApplicationConstants;
 use Spryker\Shared\Kernel\Store;
@@ -65,5 +66,15 @@ class CrossEngageFactory extends AbstractFactory
     public function getUrlLanguageKeyPlugins(): array
     {
         return $this->getProvidedDependency(CrossEngageDependencyProvider::URL_LANGUAGE_KEY_PLUGINS);
+    }
+
+    /**
+     * @return \FondOfSpryker\Yves\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceInterface
+     *
+     * @throws \Spryker\Yves\Kernel\Exception\Container\ContainerKeyNotFoundException
+     */
+    public function getNewsletterService(): CrossEngageToNewsletterServiceInterface
+    {
+        return $this->getProvidedDependency(CrossEngageDependencyProvider::SERVICE_NEWSLETTER);
     }
 }

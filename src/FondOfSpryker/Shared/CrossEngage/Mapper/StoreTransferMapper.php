@@ -162,15 +162,20 @@ class StoreTransferMapper
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
+     * @param  \Generated\Shared\Transfer\CrossEngageTransfer  $crossEngageTransfer
+     * @param  string|null  $source
      *
-     * @return CrossEngageTransfer
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
-    public function setEmailOptInSource(CrossEngageTransfer $crossEngageTransfer): CrossEngageTransfer
+    public function setEmailOptInSource(CrossEngageTransfer $crossEngageTransfer, ?string $source = null): CrossEngageTransfer
     {
         $setter = $this->getEmailOptInSourceMethod(static::SET);
 
-        return $crossEngageTransfer->$setter($this->getEmailOptInSource($crossEngageTransfer));
+        if ($source === null){
+            $source = $this->getEmailOptInSource($crossEngageTransfer);
+        }
+
+        return $crossEngageTransfer->$setter($source);
     }
 
     /**
