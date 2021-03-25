@@ -8,7 +8,7 @@ use Generated\Shared\Transfer\CrossEngageTransfer;
 use Generated\Shared\Transfer\NewsletterResponseTransfer;
 use Spryker\Yves\Kernel\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use function explode;
 
 /**
  * @method \FondOfSpryker\Yves\CrossEngage\CrossEngageFactory getFactory()
@@ -18,7 +18,8 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
 {
     /**
      * @param  string  $email
-     * @param  Request $request
+     * @param  Request  $request
+     *
      * @return NewsletterResponseTransfer
      * @throws \Exception
      */
@@ -30,13 +31,13 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
         $crossEngageTransfer = new CrossEngageTransfer();
         $crossEngageTransfer
             ->setEmail($email)
-            ->setExternalId(\sha1($email))
-            ->setLanguage(\explode('_', $this->getLocale())[0])
+            ->setExternalId($this->getFactory()->getNewsletterService()->getHash($email))
+            ->setLanguage(explode('_', $this->getLocale())[0])
             ->setBusinessUnit($this->getLocale())
             ->setHost($request->getSchemeAndHttpHost());
 
         $crossEngageTransfer = $mapper->setEmailState($crossEngageTransfer, CrossEngageConstants::XNG_STATE_NEW);
-        $crossEngageTransfer = $mapper->setEmailOptInSource($crossEngageTransfer);
+        $crossEngageTransfer = $mapper->setEmailOptInSource($crossEngageTransfer, $this->getSource($request));
         $crossEngageTransfer = $mapper->setOptInAtFor($crossEngageTransfer, null);
         $crossEngageTransfer = $mapper->setIp($crossEngageTransfer, $this->getCustomerIpAddress());
         $crossEngageTransfer->setUriLanguageKey($this->executeUrlLanguageKeyPlugins());
@@ -48,7 +49,8 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
     }
 
     /**
-     * @param  string $externalId
+     * @param  string  $externalId
+     *
      * @return NewsletterResponseTransfer
      */
     public function confirmSubscription(string $externalId): NewsletterResponseTransfer
@@ -63,7 +65,7 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
     }
 
     /**
-     * @param string $externalId
+     * @param  string  $externalId
      *
      * @return NewsletterResponseTransfer
      */
@@ -108,5 +110,15 @@ class CrossEngageSubscribePlugin extends AbstractPlugin implements NewsletterSub
         }
 
         return $ipAddress;
+    }
+
+    /**
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     *
+     * @return string|null
+     */
+    protected function getSource(Request $request): ?string
+    {
+        return $request->query->get('source');
     }
 }
