@@ -2,6 +2,8 @@
 
 namespace FondOfSpryker\Shared\CrossEngage\Mapper;
 
+use DateTime;
+use Exception;
 use FondOfSpryker\Shared\CrossEngage\CrossEngageConstants;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 
@@ -98,7 +100,7 @@ class StoreTransferMapper
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
      *
      * @return string|null
      */
@@ -110,10 +112,10 @@ class StoreTransferMapper
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
-     * @param string              $state
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     * @param string $state
      *
-     * @return CrossEngageTransfer
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
     public function setEmailState(CrossEngageTransfer $crossEngageTransfer, string $state): CrossEngageTransfer
     {
@@ -123,10 +125,11 @@ class StoreTransferMapper
     }
 
     /**
-     * @param  CrossEngageTransfer $crossEngageTransfer
-     * @return string
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return string|null
      */
-    protected function getIp(CrossEngageTransfer $crossEngageTransfer): string
+    protected function getIp(CrossEngageTransfer $crossEngageTransfer): ?string
     {
         $getter = $this->getIpMethod(static::GET);
 
@@ -134,10 +137,10 @@ class StoreTransferMapper
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     * @param string|null $ipAdress
      *
-     * @param  string|null         $ipAdress
-     * @return CrossEngageTransfer
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
     public function setIp(CrossEngageTransfer $crossEngageTransfer, ?string $ipAdress = null): CrossEngageTransfer
     {
@@ -151,7 +154,8 @@ class StoreTransferMapper
     }
 
     /**
-     * @param  CrossEngageTransfer $crossEngageTransfer
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     *
      * @return string
      */
     protected function getEmailOptInSource(CrossEngageTransfer $crossEngageTransfer): string
@@ -162,8 +166,8 @@ class StoreTransferMapper
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\CrossEngageTransfer  $crossEngageTransfer
-     * @param  string|null  $source
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     * @param string|null $source
      *
      * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
@@ -171,7 +175,7 @@ class StoreTransferMapper
     {
         $setter = $this->getEmailOptInSourceMethod(static::SET);
 
-        if ($source === null){
+        if ($source === null) {
             $source = $this->getEmailOptInSource($crossEngageTransfer);
         }
 
@@ -179,7 +183,8 @@ class StoreTransferMapper
     }
 
     /**
-     * @param  CrossEngageTransfer $crossEngageTransfer
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     *
      * @return string
      */
     protected function getOptInAtFor(CrossEngageTransfer $crossEngageTransfer): string
@@ -190,27 +195,26 @@ class StoreTransferMapper
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
-     * @param \DateTime|null      $dateTime
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     * @param \DateTime|null $dateTime
      *
-     * @return CrossEngageTransfer
-     *
-     * @throws \Exception
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
-    public function setOptInAtFor(CrossEngageTransfer $crossEngageTransfer, ?\DateTime $dateTime = null): CrossEngageTransfer
+    public function setOptInAtFor(CrossEngageTransfer $crossEngageTransfer, ?DateTime $dateTime = null): CrossEngageTransfer
     {
         $setter = $this->getOptInAtForMethod(static::SET);
 
         if ($dateTime === null) {
-            $dateTime = (new \DateTime())->format(\DateTime::ATOM);
+            $dateTime = (new DateTime())->format(DateTime::ATOM);
         }
 
         return $crossEngageTransfer->$setter($dateTime);
     }
 
     /**
-     * @param  CrossEngageTransfer $crossEngageTransfer
-     * @return CrossEngageTransfer
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
     protected function getSubscribedAtFor(CrossEngageTransfer $crossEngageTransfer): CrossEngageTransfer
     {
@@ -220,27 +224,26 @@ class StoreTransferMapper
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
-     * @param \DateTime|null      $dateTime
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     * @param \DateTime|null $dateTime
      *
-     * @return CrossEngageTransfer
-     *
-     * @throws \Exception
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
-    protected function setSubscribedAtFor(CrossEngageTransfer $crossEngageTransfer, ?\DateTime $dateTime = null): CrossEngageTransfer
+    protected function setSubscribedAtFor(CrossEngageTransfer $crossEngageTransfer, ?DateTime $dateTime = null): CrossEngageTransfer
     {
         $setter = $this->getSubscribedAtForMethod(static::SET);
 
         if ($dateTime === null) {
-            $dateTime = (new \DateTime())->format(\DateTime::ATOM);
+            $dateTime = (new DateTime())->format(DateTime::ATOM);
         }
 
         return $crossEngageTransfer->$setter($dateTime);
     }
 
     /**
-     * @param  CrossEngageTransfer $crossEngageTransfer
-     * @return CrossEngageTransfer
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     *
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
     protected function getUnsubscribedAtFor(CrossEngageTransfer $crossEngageTransfer): CrossEngageTransfer
     {
@@ -250,57 +253,53 @@ class StoreTransferMapper
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
-     * @param \DateTime|null      $dateTime
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
+     * @param \DateTime|null $dateTime
      *
-     * @return CrossEngageTransfer
-     *
-     * @throws \Exception
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
-    protected function setUnsubscribedAtFor(CrossEngageTransfer $crossEngageTransfer, ?\DateTime $dateTime = null): CrossEngageTransfer
+    protected function setUnsubscribedAtFor(CrossEngageTransfer $crossEngageTransfer, ?DateTime $dateTime = null): CrossEngageTransfer
     {
         $setter = $this->getUnsubscribedAtForMethod(static::SET);
 
         if ($dateTime === null) {
-            $dateTime = (new \DateTime())->format(\DateTime::ATOM);
+            $dateTime = (new DateTime())->format(DateTime::ATOM);
         }
 
         return $crossEngageTransfer->$setter($dateTime);
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
      * @param $state
      *
-     * @throws
+     * @throws \Exception
      *
-     * @return CrossEngageTransfer
+     * @return \Generated\Shared\Transfer\CrossEngageTransfer
      */
     public function updateEmailState(CrossEngageTransfer $crossEngageTransfer, $state): CrossEngageTransfer
     {
         $crossEngageTransfer = $this->setEmailState($crossEngageTransfer, $state);
         $crossEngageTransfer = $this->setIp($crossEngageTransfer);
+        $numericState = $this->getNumericState($crossEngageTransfer);
 
-        switch ($numericState = $this->getNumericState($crossEngageTransfer)) {
+        switch ($numericState) {
             case $numericState < 0:
                 return $crossEngageTransfer = $this->setUnsubscribedAtFor($crossEngageTransfer);
-
             case $numericState < 3:
                 $crossEngageTransfer = $this->setEmailOptInSource($crossEngageTransfer);
                 $crossEngageTransfer = $this->setOptInAtFor($crossEngageTransfer);
 
                 return $crossEngageTransfer;
-
             case $numericState === 3:
                 return $crossEngageTransfer = $this->setSubscribedAtFor($crossEngageTransfer);
-
             default:
-                throw new \Exception('this code should never reached! ' . __METHOD__);
+                throw new Exception('this code should never reached! ' . __METHOD__);
         }
     }
 
     /**
-     * @param CrossEngageTransfer $crossEngageTransfer
+     * @param \Generated\Shared\Transfer\CrossEngageTransfer $crossEngageTransfer
      *
      * @return int
      */
@@ -314,6 +313,4 @@ class StoreTransferMapper
 
         return CrossEngageConstants::XNG_NUMERIC_STATES[$crossEngageTransfer->$getter()];
     }
-
-
 }
