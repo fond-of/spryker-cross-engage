@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\CrossEngageResponseTransfer;
 use Generated\Shared\Transfer\CrossEngageTransfer;
 use Generated\Zed\Ide\Newsletter;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
@@ -42,26 +43,33 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
      */
     protected $newsletterService;
 
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @param \FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface $guzzleClient
-     * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig                                        $config
-     * @param CrossEngageEventHandler                                                                 $engageEventHandler
-     * @param StoreTransferMapper                                                                     $storeTransferMapper
-     * @param CrossEngageToNewsletterServiceInterface                                                 $newsletterService
+     * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig $config
+     * @param \FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler $engageEventHandler
+     * @param \FondOfSpryker\Shared\CrossEngage\Mapper\StoreTransferMapper $storeTransferMapper
+     * @param \FondOfSpryker\Zed\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceInterface $newsletterService
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         CrossEngageToGuzzleInterface $guzzleClient,
         CrossEngageConfig $config,
         CrossEngageEventHandler $engageEventHandler,
         StoreTransferMapper $storeTransferMapper,
-        CrossEngageToNewsletterServiceInterface $newsletterService
+        CrossEngageToNewsletterServiceInterface $newsletterService,
+        LoggerInterface $logger
     ) {
         $this->guzzleClient = $guzzleClient;
         $this->config = $config;
         $this->engageEventHandler = $engageEventHandler;
         $this->storeTransferMapper = $storeTransferMapper;
         $this->newsletterService = $newsletterService;
+        $this->logger = $logger;
     }
 
     /**
@@ -166,6 +174,10 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
 
             return $response->getStatusCode() === Response::HTTP_OK;
         } catch (RequestException $e) {
+            $this->logger->error(sprintf(
+                'Can\'t update/create cross engage user because %s',
+                $e->getMessage()
+            ));
             return false;
         }
     }
