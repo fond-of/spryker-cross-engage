@@ -15,7 +15,7 @@
         "spryker/glossary": "^3.0.0",
         "spryker/kernel": "^3.0.0",
         "spryker/zed-request": "^3.0.0",
-        "guzzlehttp/guzzle": "~6.2"
+        "guzzlehttp/guzzle": "^6.5.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "^0.17.14",
