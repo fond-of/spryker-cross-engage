@@ -8,6 +8,7 @@ use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzl
 use Generated\Shared\Transfer\CrossEngageBaseEventTransfer;
 use Generated\Shared\Transfer\CrossEngageEventTransfer;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class CrossEngageEventApiClient
@@ -23,15 +24,23 @@ class CrossEngageEventApiClient
     protected $config;
 
     /**
-     * @param CrossEngageToGuzzleInterface $guzzleClient
-     * @param CrossEngageConfig            $config
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @param \FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzleInterface $guzzleClient
+     * @param \FondOfSpryker\Zed\CrossEngage\CrossEngageConfig $config
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         CrossEngageToGuzzleInterface $guzzleClient,
-        CrossEngageConfig $config
+        CrossEngageConfig $config,
+        LoggerInterface $logger
     ) {
         $this->guzzleClient = $guzzleClient;
         $this->config = $config;
+        $this->logger = $logger;
     }
 
     /**
@@ -52,6 +61,10 @@ class CrossEngageEventApiClient
 
             return $response->getStatusCode() === Response::HTTP_ACCEPTED;
         } catch (RequestException $e) {
+            $this->logger->error(sprintf(
+                'Can\'t send cross engage event because %s',
+                $e->getMessage()
+            ));
             return false;
         }
     }

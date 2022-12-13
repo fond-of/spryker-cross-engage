@@ -121,7 +121,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     {
         return new CrossEngageEventApiClient(
             $this->getGuzzleClient(),
-            $this->getConfig()
+            $this->getConfig(),
+            $this->getLogger()
         );
     }
 
