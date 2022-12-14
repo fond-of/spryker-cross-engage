@@ -8,7 +8,6 @@ use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClient;
 use FondOfSpryker\Zed\CrossEngage\Business\Api\CrossEngageUserApiClientInterface;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageEventHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\CrossEngageSubscriptionHandler;
-use FondOfSpryker\Zed\CrossEngage\Business\Handler\ImportHandler;
 use FondOfSpryker\Zed\CrossEngage\Business\Handler\ImportHandlerInterface;
 use FondOfSpryker\Zed\CrossEngage\Business\Url\NewsletterUrlBuilder;
 use FondOfSpryker\Zed\CrossEngage\CrossEngageDependencyProvider;
@@ -16,6 +15,7 @@ use FondOfSpryker\Zed\CrossEngage\Dependency\Component\Guzzle\CrossEngageToGuzzl
 use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToNewsletterFacadeInterface;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Facade\CrossEngageToStoreFacadeInterface;
 use FondOfSpryker\Zed\CrossEngage\Dependency\Service\CrossEngageToNewsletterServiceInterface;
+use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -23,6 +23,8 @@ use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
  */
 class CrossEngageBusinessFactory extends AbstractBusinessFactory
 {
+    use LoggerTrait;
+
     /**
      * @return CrossEngageSubscriptionHandler
      */
@@ -46,7 +48,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->createCrossEngageEventHandler(),
             $this->createStoreTransferMapper(),
-            $this->getNewsletterService()
+            $this->getNewsletterService(),
+            $this->getLogger()
         );
     }
 
@@ -118,7 +121,8 @@ class CrossEngageBusinessFactory extends AbstractBusinessFactory
     {
         return new CrossEngageEventApiClient(
             $this->getGuzzleClient(),
-            $this->getConfig()
+            $this->getConfig(),
+            $this->getLogger()
         );
     }
 
