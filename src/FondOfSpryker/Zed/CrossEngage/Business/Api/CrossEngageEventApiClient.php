@@ -63,7 +63,7 @@ class CrossEngageEventApiClient
         } catch (RequestException $e) {
             $this->logger->error(sprintf(
                 'Can\'t send cross engage event because %s',
-                $e->getMessage()
+                $e->getResponse()->getBody()
             ));
             return false;
         }
