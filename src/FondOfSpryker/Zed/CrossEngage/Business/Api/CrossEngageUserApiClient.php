@@ -176,7 +176,7 @@ class CrossEngageUserApiClient implements CrossEngageUserApiClientInterface
         } catch (RequestException $e) {
             $this->logger->error(sprintf(
                 'Can\'t update/create cross engage user because %s',
-                $e->getMessage()
+                $e->getResponse()->getBody()
             ));
             return false;
         }
